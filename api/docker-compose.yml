@@ -1,0 +1,20 @@
+services:
+  api:
+    build: ./api
+    restart: always
+    env_file:
+      - ./api/.env
+    ports:
+      - "3000:3000"
+  db:
+    image: postgres:18.3-alpine
+    restart: always
+    env_file:
+      - ./api/.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

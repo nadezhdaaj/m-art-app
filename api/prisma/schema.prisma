@@ -1,0 +1,289 @@
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+generator prismabox {
+  provider                    = "prismabox"
+  typeboxImportDependencyName = "elysia"
+  typeboxImportVariableName   = "t"
+  inputModel                  = true
+  output                      = "../src/generated/prismabox"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String    @id
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  accounts      Account[]
+  sessions      Session[]
+  profile       Profile?
+
+  @@map("user")
+}
+
+model Profile {
+  id             String          @id @default(cuid())
+  userId         String          @unique
+  displayName    String?
+  avatarUrl      String?
+  xp             Int             @default(0)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievements   UserAchievement[]
+  quizAttempts   QuizAttempt[]
+  progressEvents ProgressEvent[]
+
+  @@index([userId])
+  @@map("profile")
+}
+
+enum QuizType {
+  MULTIPLE_CHOICE
+  YES_NO
+}
+
+enum QuizStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model Quiz {
+  id              String             @id @default(cuid())
+  slug            String             @unique
+  title           String
+  description     String?
+  previewImageUrl String?
+  type            QuizType           @default(MULTIPLE_CHOICE)
+  status          QuizStatus         @default(DRAFT)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  questions       QuizQuestion[]
+  imagePool       QuizImage[]
+  attempts        QuizAttempt[]
+
+  @@map("quiz")
+}
+
+model QuizQuestion {
+  id         String       @id @default(cuid())
+  quizId     String
+  text       String
+  fact       String
+  imageUrl   String?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  quiz       Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  answers    QuizAnswer[]
+
+  @@index([quizId])
+  @@map("quiz_question")
+}
+
+model QuizAnswer {
+  id         String       @id @default(cuid())
+  questionId String
+  orderIndex Int
+  text       String
+  isCorrect  Boolean      @default(false)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  question   QuizQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@unique([questionId, orderIndex])
+  @@index([questionId])
+  @@map("quiz_answer")
+}
+
+model QuizImage {
+  id        String   @id @default(cuid())
+  quizId    String
+  imageUrl  String
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@index([quizId])
+  @@map("quiz_image")
+}
+
+enum QuizAttemptStatus {
+  IN_PROGRESS
+  COMPLETED
+  ABANDONED
+}
+
+model QuizAttempt {
+  id                   String            @id @default(cuid())
+  profileId            String
+  quizId               String
+  status               QuizAttemptStatus @default(IN_PROGRESS)
+  currentQuestionIndex Int               @default(0)
+  totalQuestions       Int
+  correctAnswers       Int               @default(0)
+  wrongAnswers         Int               @default(0)
+  score                Int               @default(0)
+  accuracyPercent      Int               @default(0)
+  questionOrderIds     Json?
+  answeredQuestionIds  Json?
+  startedAt            DateTime          @default(now())
+  finishedAt           DateTime?
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+  profile              Profile           @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  quiz                 Quiz              @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  answers              QuizAttemptAnswer[]
+
+  @@index([profileId, quizId, createdAt(sort: Desc)])
+  @@index([profileId, quizId, status])
+  @@index([quizId])
+  @@map("quiz_attempt")
+}
+
+model QuizAttemptAnswer {
+  id               String      @id @default(cuid())
+  attemptId        String
+  questionId       String
+  selectedAnswerId String
+  isCorrect        Boolean
+  answeredAt       DateTime    @default(now())
+  attempt          QuizAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+
+  @@unique([attemptId, questionId])
+  @@index([attemptId])
+  @@map("quiz_attempt_answer")
+}
+
+enum ProgressEventSourceType {
+  QUIZ_ATTEMPT
+  EXHIBIT_VIEW
+  DAILY_LOGIN
+  ARTWORK_CREATED
+}
+
+enum ProgressEventType {
+  QUIZ_COMPLETED
+  ACHIEVEMENT_UNLOCKED
+}
+
+model ProgressEvent {
+  id             String                  @id @default(cuid())
+  profileId      String
+  sourceType     ProgressEventSourceType
+  sourceId       String
+  eventType      ProgressEventType
+  xpDelta        Int                     @default(0)
+  payload        Json?
+  idempotencyKey String                  @unique
+  createdAt      DateTime                @default(now())
+  profile        Profile                 @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([profileId, createdAt])
+  @@index([sourceType, sourceId])
+  @@map("progress_event")
+}
+
+enum AchievementRuleType {
+  QUIZ_COMPLETIONS
+  QUIZ_PERFECT_SCORE
+  QUIZ_CORRECT_ANSWERS
+  QUIZ_SINGLE_COMPLETION
+}
+
+model Achievement {
+  id          String              @id @default(cuid())
+  code        String              @unique
+  name        String
+  description String?
+  iconUrl     String?
+  category    String?
+  rarity      String?
+  ruleType    AchievementRuleType
+  ruleConfig  Json
+  xpReward    Int                 @default(0)
+  isHidden    Boolean             @default(false)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  users       UserAchievement[]
+
+  @@map("achievement")
+}
+
+model UserAchievement {
+  id            String      @id @default(cuid())
+  profileId     String
+  achievementId String
+  unlockedAt    DateTime    @default(now())
+  progress      Int         @default(0)
+  metadata      Json?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  profile       Profile     @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, achievementId])
+  @@index([profileId])
+  @@index([achievementId])
+  @@map("user_achievement")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([providerId, accountId])
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
