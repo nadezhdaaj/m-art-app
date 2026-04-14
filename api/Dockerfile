@@ -7,16 +7,11 @@ COPY bun.lock bun.lock
 
 RUN bun install
 
-COPY ./src ./src
+COPY . .
 
 ENV NODE_ENV=production
 
-RUN bun build \
-	--compile \
-	--minify-whitespace \
-	--minify-syntax \
-	--outfile server \
-	src/index.ts
+RUN bun run build
 
 FROM gcr.io/distroless/base
 

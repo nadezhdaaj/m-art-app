@@ -1,16 +1,35 @@
 services:
-  api:
-    build: ./api
-    restart: always
+  migrate:
+    image: oven/bun:1
+    working_dir: /app
+    depends_on:
+      - db
     env_file:
-      - ./api/.env
+      - .env
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/mart
+    volumes:
+      - .:/app
+    command: >
+      sh -lc "bun install --frozen-lockfile &&
+      bunx --bun prisma migrate deploy &&
+      bun run seed"
+  api:
+    build: .
+    restart: always
+    depends_on:
+      - db
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/mart
     ports:
       - "3000:3000"
   db:
     image: postgres:18.3-alpine
     restart: always
     env_file:
-      - ./api/.env
+      - .env
     ports:
       - "5432:5432"
     volumes:
