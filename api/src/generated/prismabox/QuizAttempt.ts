@@ -1,15 +1,22 @@
 import { t } from "elysia";
-import { __nullable__ } from "./__nullable__";
+
 import { __transformDate__ } from "./__transformDate__";
+
+import { __nullable__ } from "./__nullable__";
 
 export const QuizAttemptPlain = t.Object(
   {
     id: t.String(),
     profileId: t.String(),
     quizId: t.String(),
-    status: t.Union([t.Literal("IN_PROGRESS"), t.Literal("COMPLETED"), t.Literal("ABANDONED")], {
-      additionalProperties: false,
-    }),
+    status: t.Union(
+      [
+        t.Literal("IN_PROGRESS"),
+        t.Literal("COMPLETED"),
+        t.Literal("ABANDONED"),
+      ],
+      { additionalProperties: false },
+    ),
     currentQuestionIndex: t.Integer(),
     totalQuestions: t.Integer(),
     correctAnswers: t.Integer(),
@@ -50,9 +57,10 @@ export const QuizAttemptRelations = t.Object(
         type: t.Union([t.Literal("MULTIPLE_CHOICE"), t.Literal("YES_NO")], {
           additionalProperties: false,
         }),
-        status: t.Union([t.Literal("DRAFT"), t.Literal("PUBLISHED"), t.Literal("ARCHIVED")], {
-          additionalProperties: false,
-        }),
+        status: t.Union(
+          [t.Literal("DRAFT"), t.Literal("PUBLISHED"), t.Literal("ARCHIVED")],
+          { additionalProperties: false },
+        ),
         createdAt: t.Date(),
         updatedAt: t.Date(),
       },
@@ -79,9 +87,14 @@ export const QuizAttemptRelations = t.Object(
 export const QuizAttemptPlainInputCreate = t.Object(
   {
     status: t.Optional(
-      t.Union([t.Literal("IN_PROGRESS"), t.Literal("COMPLETED"), t.Literal("ABANDONED")], {
-        additionalProperties: false,
-      }),
+      t.Union(
+        [
+          t.Literal("IN_PROGRESS"),
+          t.Literal("COMPLETED"),
+          t.Literal("ABANDONED"),
+        ],
+        { additionalProperties: false },
+      ),
     ),
     currentQuestionIndex: t.Optional(t.Integer()),
     totalQuestions: t.Integer(),
@@ -100,9 +113,14 @@ export const QuizAttemptPlainInputCreate = t.Object(
 export const QuizAttemptPlainInputUpdate = t.Object(
   {
     status: t.Optional(
-      t.Union([t.Literal("IN_PROGRESS"), t.Literal("COMPLETED"), t.Literal("ABANDONED")], {
-        additionalProperties: false,
-      }),
+      t.Union(
+        [
+          t.Literal("IN_PROGRESS"),
+          t.Literal("COMPLETED"),
+          t.Literal("ABANDONED"),
+        ],
+        { additionalProperties: false },
+      ),
     ),
     currentQuestionIndex: t.Optional(t.Integer()),
     totalQuestions: t.Optional(t.Integer()),
@@ -229,7 +247,11 @@ export const QuizAttemptWhere = t.Partial(
           profileId: t.String(),
           quizId: t.String(),
           status: t.Union(
-            [t.Literal("IN_PROGRESS"), t.Literal("COMPLETED"), t.Literal("ABANDONED")],
+            [
+              t.Literal("IN_PROGRESS"),
+              t.Literal("COMPLETED"),
+              t.Literal("ABANDONED"),
+            ],
             { additionalProperties: false },
           ),
           currentQuestionIndex: t.Integer(),
@@ -255,16 +277,23 @@ export const QuizAttemptWhereUnique = t.Recursive(
   (Self) =>
     t.Intersect(
       [
-        t.Partial(t.Object({ id: t.String() }, { additionalProperties: false }), {
-          additionalProperties: false,
-        }),
+        t.Partial(
+          t.Object({ id: t.String() }, { additionalProperties: false }),
+          { additionalProperties: false },
+        ),
         t.Union([t.Object({ id: t.String() })], {
           additionalProperties: false,
         }),
         t.Partial(
           t.Object({
-            AND: t.Union([Self, t.Array(Self, { additionalProperties: false })]),
-            NOT: t.Union([Self, t.Array(Self, { additionalProperties: false })]),
+            AND: t.Union([
+              Self,
+              t.Array(Self, { additionalProperties: false }),
+            ]),
+            NOT: t.Union([
+              Self,
+              t.Array(Self, { additionalProperties: false }),
+            ]),
             OR: t.Array(Self, { additionalProperties: false }),
           }),
           { additionalProperties: false },
@@ -276,7 +305,11 @@ export const QuizAttemptWhereUnique = t.Recursive(
               profileId: t.String(),
               quizId: t.String(),
               status: t.Union(
-                [t.Literal("IN_PROGRESS"), t.Literal("COMPLETED"), t.Literal("ABANDONED")],
+                [
+                  t.Literal("IN_PROGRESS"),
+                  t.Literal("COMPLETED"),
+                  t.Literal("ABANDONED"),
+                ],
                 { additionalProperties: false },
               ),
               currentQuestionIndex: t.Integer(),
@@ -395,9 +428,10 @@ export const QuizAttemptOrderBy = t.Partial(
   ),
 );
 
-export const QuizAttempt = t.Composite([QuizAttemptPlain, QuizAttemptRelations], {
-  additionalProperties: false,
-});
+export const QuizAttempt = t.Composite(
+  [QuizAttemptPlain, QuizAttemptRelations],
+  { additionalProperties: false },
+);
 
 export const QuizAttemptInputCreate = t.Composite(
   [QuizAttemptPlainInputCreate, QuizAttemptRelationsInputCreate],

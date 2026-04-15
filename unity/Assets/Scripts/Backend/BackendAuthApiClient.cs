@@ -117,4 +117,5 @@ public class BackendAuthApiClient
         string normalized = string.IsNullOrWhiteSpace(rawBaseUrl) ? "http://localhost:3000" : rawBaseUrl.Trim();
         return normalized.EndsWith("/") ? normalized.TrimEnd('/') : normalized;
     }
+
 }

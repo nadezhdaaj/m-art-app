@@ -1,6 +1,8 @@
 import { t } from "elysia";
-import { __nullable__ } from "./__nullable__";
+
 import { __transformDate__ } from "./__transformDate__";
+
+import { __nullable__ } from "./__nullable__";
 
 export const ProgressEventPlain = t.Object(
   {
@@ -16,9 +18,10 @@ export const ProgressEventPlain = t.Object(
       { additionalProperties: false },
     ),
     sourceId: t.String(),
-    eventType: t.Union([t.Literal("QUIZ_COMPLETED"), t.Literal("ACHIEVEMENT_UNLOCKED")], {
-      additionalProperties: false,
-    }),
+    eventType: t.Union(
+      [t.Literal("QUIZ_COMPLETED"), t.Literal("ACHIEVEMENT_UNLOCKED")],
+      { additionalProperties: false },
+    ),
     xpDelta: t.Integer(),
     payload: __nullable__(t.Any()),
     idempotencyKey: t.String(),
@@ -56,9 +59,10 @@ export const ProgressEventPlainInputCreate = t.Object(
       ],
       { additionalProperties: false },
     ),
-    eventType: t.Union([t.Literal("QUIZ_COMPLETED"), t.Literal("ACHIEVEMENT_UNLOCKED")], {
-      additionalProperties: false,
-    }),
+    eventType: t.Union(
+      [t.Literal("QUIZ_COMPLETED"), t.Literal("ACHIEVEMENT_UNLOCKED")],
+      { additionalProperties: false },
+    ),
     xpDelta: t.Optional(t.Integer()),
     payload: t.Optional(__nullable__(t.Any())),
     idempotencyKey: t.String(),
@@ -80,9 +84,10 @@ export const ProgressEventPlainInputUpdate = t.Object(
       ),
     ),
     eventType: t.Optional(
-      t.Union([t.Literal("QUIZ_COMPLETED"), t.Literal("ACHIEVEMENT_UNLOCKED")], {
-        additionalProperties: false,
-      }),
+      t.Union(
+        [t.Literal("QUIZ_COMPLETED"), t.Literal("ACHIEVEMENT_UNLOCKED")],
+        { additionalProperties: false },
+      ),
     ),
     xpDelta: t.Optional(t.Integer()),
     payload: t.Optional(__nullable__(t.Any())),
@@ -147,9 +152,10 @@ export const ProgressEventWhere = t.Partial(
             { additionalProperties: false },
           ),
           sourceId: t.String(),
-          eventType: t.Union([t.Literal("QUIZ_COMPLETED"), t.Literal("ACHIEVEMENT_UNLOCKED")], {
-            additionalProperties: false,
-          }),
+          eventType: t.Union(
+            [t.Literal("QUIZ_COMPLETED"), t.Literal("ACHIEVEMENT_UNLOCKED")],
+            { additionalProperties: false },
+          ),
           xpDelta: t.Integer(),
           payload: t.Any(),
           idempotencyKey: t.String(),
@@ -166,16 +172,29 @@ export const ProgressEventWhereUnique = t.Recursive(
     t.Intersect(
       [
         t.Partial(
-          t.Object({ id: t.String(), idempotencyKey: t.String() }, { additionalProperties: false }),
+          t.Object(
+            { id: t.String(), idempotencyKey: t.String() },
+            { additionalProperties: false },
+          ),
           { additionalProperties: false },
         ),
-        t.Union([t.Object({ id: t.String() }), t.Object({ idempotencyKey: t.String() })], {
-          additionalProperties: false,
-        }),
+        t.Union(
+          [
+            t.Object({ id: t.String() }),
+            t.Object({ idempotencyKey: t.String() }),
+          ],
+          { additionalProperties: false },
+        ),
         t.Partial(
           t.Object({
-            AND: t.Union([Self, t.Array(Self, { additionalProperties: false })]),
-            NOT: t.Union([Self, t.Array(Self, { additionalProperties: false })]),
+            AND: t.Union([
+              Self,
+              t.Array(Self, { additionalProperties: false }),
+            ]),
+            NOT: t.Union([
+              Self,
+              t.Array(Self, { additionalProperties: false }),
+            ]),
             OR: t.Array(Self, { additionalProperties: false }),
           }),
           { additionalProperties: false },
@@ -195,9 +214,13 @@ export const ProgressEventWhereUnique = t.Recursive(
                 { additionalProperties: false },
               ),
               sourceId: t.String(),
-              eventType: t.Union([t.Literal("QUIZ_COMPLETED"), t.Literal("ACHIEVEMENT_UNLOCKED")], {
-                additionalProperties: false,
-              }),
+              eventType: t.Union(
+                [
+                  t.Literal("QUIZ_COMPLETED"),
+                  t.Literal("ACHIEVEMENT_UNLOCKED"),
+                ],
+                { additionalProperties: false },
+              ),
               xpDelta: t.Integer(),
               payload: t.Any(),
               idempotencyKey: t.String(),
@@ -272,9 +295,10 @@ export const ProgressEventOrderBy = t.Partial(
   ),
 );
 
-export const ProgressEvent = t.Composite([ProgressEventPlain, ProgressEventRelations], {
-  additionalProperties: false,
-});
+export const ProgressEvent = t.Composite(
+  [ProgressEventPlain, ProgressEventRelations],
+  { additionalProperties: false },
+);
 
 export const ProgressEventInputCreate = t.Composite(
   [ProgressEventPlainInputCreate, ProgressEventRelationsInputCreate],

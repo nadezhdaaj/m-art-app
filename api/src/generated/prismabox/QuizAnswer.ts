@@ -1,6 +1,8 @@
 import { t } from "elysia";
-import { __nullable__ } from "./__nullable__";
+
 import { __transformDate__ } from "./__transformDate__";
+
+import { __nullable__ } from "./__nullable__";
 
 export const QuizAnswerPlain = t.Object(
   {
@@ -140,8 +142,14 @@ export const QuizAnswerWhereUnique = t.Recursive(
         ),
         t.Partial(
           t.Object({
-            AND: t.Union([Self, t.Array(Self, { additionalProperties: false })]),
-            NOT: t.Union([Self, t.Array(Self, { additionalProperties: false })]),
+            AND: t.Union([
+              Self,
+              t.Array(Self, { additionalProperties: false }),
+            ]),
+            NOT: t.Union([
+              Self,
+              t.Array(Self, { additionalProperties: false }),
+            ]),
             OR: t.Array(Self, { additionalProperties: false }),
           }),
           { additionalProperties: false },
@@ -184,7 +192,10 @@ export const QuizAnswerSelect = t.Partial(
 );
 
 export const QuizAnswerInclude = t.Partial(
-  t.Object({ question: t.Boolean(), _count: t.Boolean() }, { additionalProperties: false }),
+  t.Object(
+    { question: t.Boolean(), _count: t.Boolean() },
+    { additionalProperties: false },
+  ),
 );
 
 export const QuizAnswerOrderBy = t.Partial(

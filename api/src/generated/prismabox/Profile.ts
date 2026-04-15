@@ -1,6 +1,8 @@
 import { t } from "elysia";
-import { __nullable__ } from "./__nullable__";
+
 import { __transformDate__ } from "./__transformDate__";
+
+import { __nullable__ } from "./__nullable__";
 
 export const ProfilePlain = t.Object(
   {
@@ -52,7 +54,11 @@ export const ProfileRelations = t.Object(
           profileId: t.String(),
           quizId: t.String(),
           status: t.Union(
-            [t.Literal("IN_PROGRESS"), t.Literal("COMPLETED"), t.Literal("ABANDONED")],
+            [
+              t.Literal("IN_PROGRESS"),
+              t.Literal("COMPLETED"),
+              t.Literal("ABANDONED"),
+            ],
             { additionalProperties: false },
           ),
           currentQuestionIndex: t.Integer(),
@@ -87,9 +93,10 @@ export const ProfileRelations = t.Object(
             { additionalProperties: false },
           ),
           sourceId: t.String(),
-          eventType: t.Union([t.Literal("QUIZ_COMPLETED"), t.Literal("ACHIEVEMENT_UNLOCKED")], {
-            additionalProperties: false,
-          }),
+          eventType: t.Union(
+            [t.Literal("QUIZ_COMPLETED"), t.Literal("ACHIEVEMENT_UNLOCKED")],
+            { additionalProperties: false },
+          ),
           xpDelta: t.Integer(),
           payload: __nullable__(t.Any()),
           idempotencyKey: t.String(),
@@ -307,16 +314,26 @@ export const ProfileWhereUnique = t.Recursive(
     t.Intersect(
       [
         t.Partial(
-          t.Object({ id: t.String(), userId: t.String() }, { additionalProperties: false }),
+          t.Object(
+            { id: t.String(), userId: t.String() },
+            { additionalProperties: false },
+          ),
           { additionalProperties: false },
         ),
-        t.Union([t.Object({ id: t.String() }), t.Object({ userId: t.String() })], {
-          additionalProperties: false,
-        }),
+        t.Union(
+          [t.Object({ id: t.String() }), t.Object({ userId: t.String() })],
+          { additionalProperties: false },
+        ),
         t.Partial(
           t.Object({
-            AND: t.Union([Self, t.Array(Self, { additionalProperties: false })]),
-            NOT: t.Union([Self, t.Array(Self, { additionalProperties: false })]),
+            AND: t.Union([
+              Self,
+              t.Array(Self, { additionalProperties: false }),
+            ]),
+            NOT: t.Union([
+              Self,
+              t.Array(Self, { additionalProperties: false }),
+            ]),
             OR: t.Array(Self, { additionalProperties: false }),
           }),
           { additionalProperties: false },

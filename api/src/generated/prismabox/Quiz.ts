@@ -1,6 +1,8 @@
 import { t } from "elysia";
-import { __nullable__ } from "./__nullable__";
+
 import { __transformDate__ } from "./__transformDate__";
+
+import { __nullable__ } from "./__nullable__";
 
 export const QuizPlain = t.Object(
   {
@@ -12,9 +14,10 @@ export const QuizPlain = t.Object(
     type: t.Union([t.Literal("MULTIPLE_CHOICE"), t.Literal("YES_NO")], {
       additionalProperties: false,
     }),
-    status: t.Union([t.Literal("DRAFT"), t.Literal("PUBLISHED"), t.Literal("ARCHIVED")], {
-      additionalProperties: false,
-    }),
+    status: t.Union(
+      [t.Literal("DRAFT"), t.Literal("PUBLISHED"), t.Literal("ARCHIVED")],
+      { additionalProperties: false },
+    ),
     createdAt: t.Date(),
     updatedAt: t.Date(),
   },
@@ -59,7 +62,11 @@ export const QuizRelations = t.Object(
           profileId: t.String(),
           quizId: t.String(),
           status: t.Union(
-            [t.Literal("IN_PROGRESS"), t.Literal("COMPLETED"), t.Literal("ABANDONED")],
+            [
+              t.Literal("IN_PROGRESS"),
+              t.Literal("COMPLETED"),
+              t.Literal("ABANDONED"),
+            ],
             { additionalProperties: false },
           ),
           currentQuestionIndex: t.Integer(),
@@ -95,9 +102,10 @@ export const QuizPlainInputCreate = t.Object(
       }),
     ),
     status: t.Optional(
-      t.Union([t.Literal("DRAFT"), t.Literal("PUBLISHED"), t.Literal("ARCHIVED")], {
-        additionalProperties: false,
-      }),
+      t.Union(
+        [t.Literal("DRAFT"), t.Literal("PUBLISHED"), t.Literal("ARCHIVED")],
+        { additionalProperties: false },
+      ),
     ),
   },
   { additionalProperties: false },
@@ -115,9 +123,10 @@ export const QuizPlainInputUpdate = t.Object(
       }),
     ),
     status: t.Optional(
-      t.Union([t.Literal("DRAFT"), t.Literal("PUBLISHED"), t.Literal("ARCHIVED")], {
-        additionalProperties: false,
-      }),
+      t.Union(
+        [t.Literal("DRAFT"), t.Literal("PUBLISHED"), t.Literal("ARCHIVED")],
+        { additionalProperties: false },
+      ),
     ),
   },
   { additionalProperties: false },
@@ -276,9 +285,10 @@ export const QuizWhere = t.Partial(
           type: t.Union([t.Literal("MULTIPLE_CHOICE"), t.Literal("YES_NO")], {
             additionalProperties: false,
           }),
-          status: t.Union([t.Literal("DRAFT"), t.Literal("PUBLISHED"), t.Literal("ARCHIVED")], {
-            additionalProperties: false,
-          }),
+          status: t.Union(
+            [t.Literal("DRAFT"), t.Literal("PUBLISHED"), t.Literal("ARCHIVED")],
+            { additionalProperties: false },
+          ),
           createdAt: t.Date(),
           updatedAt: t.Date(),
         },
@@ -292,16 +302,27 @@ export const QuizWhereUnique = t.Recursive(
   (Self) =>
     t.Intersect(
       [
-        t.Partial(t.Object({ id: t.String(), slug: t.String() }, { additionalProperties: false }), {
-          additionalProperties: false,
-        }),
-        t.Union([t.Object({ id: t.String() }), t.Object({ slug: t.String() })], {
-          additionalProperties: false,
-        }),
+        t.Partial(
+          t.Object(
+            { id: t.String(), slug: t.String() },
+            { additionalProperties: false },
+          ),
+          { additionalProperties: false },
+        ),
+        t.Union(
+          [t.Object({ id: t.String() }), t.Object({ slug: t.String() })],
+          { additionalProperties: false },
+        ),
         t.Partial(
           t.Object({
-            AND: t.Union([Self, t.Array(Self, { additionalProperties: false })]),
-            NOT: t.Union([Self, t.Array(Self, { additionalProperties: false })]),
+            AND: t.Union([
+              Self,
+              t.Array(Self, { additionalProperties: false }),
+            ]),
+            NOT: t.Union([
+              Self,
+              t.Array(Self, { additionalProperties: false }),
+            ]),
             OR: t.Array(Self, { additionalProperties: false }),
           }),
           { additionalProperties: false },
@@ -314,12 +335,18 @@ export const QuizWhereUnique = t.Recursive(
               title: t.String(),
               description: t.String(),
               previewImageUrl: t.String(),
-              type: t.Union([t.Literal("MULTIPLE_CHOICE"), t.Literal("YES_NO")], {
-                additionalProperties: false,
-              }),
-              status: t.Union([t.Literal("DRAFT"), t.Literal("PUBLISHED"), t.Literal("ARCHIVED")], {
-                additionalProperties: false,
-              }),
+              type: t.Union(
+                [t.Literal("MULTIPLE_CHOICE"), t.Literal("YES_NO")],
+                { additionalProperties: false },
+              ),
+              status: t.Union(
+                [
+                  t.Literal("DRAFT"),
+                  t.Literal("PUBLISHED"),
+                  t.Literal("ARCHIVED"),
+                ],
+                { additionalProperties: false },
+              ),
               createdAt: t.Date(),
               updatedAt: t.Date(),
             },
@@ -400,10 +427,12 @@ export const Quiz = t.Composite([QuizPlain, QuizRelations], {
   additionalProperties: false,
 });
 
-export const QuizInputCreate = t.Composite([QuizPlainInputCreate, QuizRelationsInputCreate], {
-  additionalProperties: false,
-});
+export const QuizInputCreate = t.Composite(
+  [QuizPlainInputCreate, QuizRelationsInputCreate],
+  { additionalProperties: false },
+);
 
-export const QuizInputUpdate = t.Composite([QuizPlainInputUpdate, QuizRelationsInputUpdate], {
-  additionalProperties: false,
-});
+export const QuizInputUpdate = t.Composite(
+  [QuizPlainInputUpdate, QuizRelationsInputUpdate],
+  { additionalProperties: false },
+);

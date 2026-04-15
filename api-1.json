@@ -187,6 +187,220 @@
     }
   },
   "paths": {
+    "/news/": {
+      "get": {
+        "tags": [
+          "News"
+        ],
+        "summary": "List published news posts",
+        "responses": {
+          "200": {
+            "description": "Response for status 200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "slug",
+                      "title",
+                      "excerpt",
+                      "coverImageUrl",
+                      "publishedAt"
+                    ],
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "slug": {
+                        "type": "string"
+                      },
+                      "title": {
+                        "type": "string"
+                      },
+                      "excerpt": {
+                        "nullable": true,
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "coverImageUrl": {
+                        "nullable": true,
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "publishedAt": {
+                        "format": "date-time",
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getNews"
+      }
+    },
+    "/news/{slug}": {
+      "get": {
+        "tags": [
+          "News"
+        ],
+        "summary": "Get published news post by slug",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for status 200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "slug",
+                    "title",
+                    "excerpt",
+                    "coverImageUrl",
+                    "publishedAt",
+                    "content",
+                    "sourceType",
+                    "sourceUrl",
+                    "sourceExternalId",
+                    "createdAt",
+                    "updatedAt"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "slug": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "excerpt": {
+                      "nullable": true,
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "coverImageUrl": {
+                      "nullable": true,
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "publishedAt": {
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "content": {
+                      "type": "string"
+                    },
+                    "sourceType": {
+                      "type": "string",
+                      "enum": [
+                        "MANUAL",
+                        "IMPORT"
+                      ]
+                    },
+                    "sourceUrl": {
+                      "nullable": true,
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "sourceExternalId": {
+                      "nullable": true,
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "createdAt": {
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "format": "date-time",
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Response for status 404",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getNewsBySlug"
+      }
+    },
     "/profile/me": {
       "get": {
         "tags": [
@@ -199,15 +413,16 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "additionalProperties": false,
                   "type": "object",
                   "required": [
                     "id",
                     "userId",
                     "displayName",
                     "avatarUrl",
+                    "xp",
                     "createdAt",
-                    "updatedAt",
-                    "progress"
+                    "updatedAt"
                   ],
                   "properties": {
                     "id": {
@@ -233,6 +448,18 @@
                         },
                         {
                           "type": "string"
+                        }
+                      ]
+                    },
+                    "xp": {
+                      "anyOf": [
+                        {
+                          "format": "integer",
+                          "default": 0,
+                          "type": "string"
+                        },
+                        {
+                          "type": "integer"
                         }
                       ]
                     },
@@ -269,80 +496,6 @@
                         },
                         {
                           "type": "number"
-                        }
-                      ]
-                    },
-                    "progress": {
-                      "anyOf": [
-                        {
-                          "type": "null"
-                        },
-                        {
-                          "additionalProperties": false,
-                          "type": "object",
-                          "required": [
-                            "id",
-                            "profileId",
-                            "xp",
-                            "createdAt",
-                            "updatedAt"
-                          ],
-                          "properties": {
-                            "id": {
-                              "type": "string"
-                            },
-                            "profileId": {
-                              "type": "string"
-                            },
-                            "xp": {
-                              "anyOf": [
-                                {
-                                  "format": "integer",
-                                  "default": 0,
-                                  "type": "string"
-                                },
-                                {
-                                  "type": "integer"
-                                }
-                              ]
-                            },
-                            "createdAt": {
-                              "anyOf": [
-                                {
-                                  "type": "Date"
-                                },
-                                {
-                                  "format": "date-time",
-                                  "type": "string"
-                                },
-                                {
-                                  "format": "date",
-                                  "type": "string"
-                                },
-                                {
-                                  "type": "number"
-                                }
-                              ]
-                            },
-                            "updatedAt": {
-                              "anyOf": [
-                                {
-                                  "type": "Date"
-                                },
-                                {
-                                  "format": "date-time",
-                                  "type": "string"
-                                },
-                                {
-                                  "format": "date",
-                                  "type": "string"
-                                },
-                                {
-                                  "type": "number"
-                                }
-                              ]
-                            }
-                          }
                         }
                       ]
                     }
@@ -471,15 +624,16 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "additionalProperties": false,
                   "type": "object",
                   "required": [
                     "id",
                     "userId",
                     "displayName",
                     "avatarUrl",
+                    "xp",
                     "createdAt",
-                    "updatedAt",
-                    "progress"
+                    "updatedAt"
                   ],
                   "properties": {
                     "id": {
@@ -505,6 +659,18 @@
                         },
                         {
                           "type": "string"
+                        }
+                      ]
+                    },
+                    "xp": {
+                      "anyOf": [
+                        {
+                          "format": "integer",
+                          "default": 0,
+                          "type": "string"
+                        },
+                        {
+                          "type": "integer"
                         }
                       ]
                     },
@@ -543,80 +709,6 @@
                           "type": "number"
                         }
                       ]
-                    },
-                    "progress": {
-                      "anyOf": [
-                        {
-                          "type": "null"
-                        },
-                        {
-                          "additionalProperties": false,
-                          "type": "object",
-                          "required": [
-                            "id",
-                            "profileId",
-                            "xp",
-                            "createdAt",
-                            "updatedAt"
-                          ],
-                          "properties": {
-                            "id": {
-                              "type": "string"
-                            },
-                            "profileId": {
-                              "type": "string"
-                            },
-                            "xp": {
-                              "anyOf": [
-                                {
-                                  "format": "integer",
-                                  "default": 0,
-                                  "type": "string"
-                                },
-                                {
-                                  "type": "integer"
-                                }
-                              ]
-                            },
-                            "createdAt": {
-                              "anyOf": [
-                                {
-                                  "type": "Date"
-                                },
-                                {
-                                  "format": "date-time",
-                                  "type": "string"
-                                },
-                                {
-                                  "format": "date",
-                                  "type": "string"
-                                },
-                                {
-                                  "type": "number"
-                                }
-                              ]
-                            },
-                            "updatedAt": {
-                              "anyOf": [
-                                {
-                                  "type": "Date"
-                                },
-                                {
-                                  "format": "date-time",
-                                  "type": "string"
-                                },
-                                {
-                                  "format": "date",
-                                  "type": "string"
-                                },
-                                {
-                                  "type": "number"
-                                }
-                              ]
-                            }
-                          }
-                        }
-                      ]
                     }
                   }
                 }
@@ -648,6 +740,757 @@
           }
         },
         "operationId": "patchProfileMe"
+      }
+    },
+    "/profile/me/overview": {
+      "get": {
+        "tags": [
+          "Profile"
+        ],
+        "summary": "Get my profile overview with progression",
+        "responses": {
+          "200": {
+            "description": "Response for status 200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "profile",
+                    "progression"
+                  ],
+                  "properties": {
+                    "profile": {
+                      "additionalProperties": false,
+                      "type": "object",
+                      "required": [
+                        "id",
+                        "userId",
+                        "displayName",
+                        "avatarUrl",
+                        "xp",
+                        "createdAt",
+                        "updatedAt"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "userId": {
+                          "type": "string"
+                        },
+                        "displayName": {
+                          "anyOf": [
+                            {
+                              "type": "null"
+                            },
+                            {
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "avatarUrl": {
+                          "anyOf": [
+                            {
+                              "type": "null"
+                            },
+                            {
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "xp": {
+                          "anyOf": [
+                            {
+                              "format": "integer",
+                              "default": 0,
+                              "type": "string"
+                            },
+                            {
+                              "type": "integer"
+                            }
+                          ]
+                        },
+                        "createdAt": {
+                          "anyOf": [
+                            {
+                              "type": "Date"
+                            },
+                            {
+                              "format": "date-time",
+                              "type": "string"
+                            },
+                            {
+                              "format": "date",
+                              "type": "string"
+                            },
+                            {
+                              "type": "number"
+                            }
+                          ]
+                        },
+                        "updatedAt": {
+                          "anyOf": [
+                            {
+                              "type": "Date"
+                            },
+                            {
+                              "format": "date-time",
+                              "type": "string"
+                            },
+                            {
+                              "format": "date",
+                              "type": "string"
+                            },
+                            {
+                              "type": "number"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "progression": {
+                      "type": "object",
+                      "required": [
+                        "xp",
+                        "totalQuizCompletions",
+                        "totalQuizCorrectAnswers",
+                        "lastRewardedAt",
+                        "levelProgress",
+                        "achievements"
+                      ],
+                      "properties": {
+                        "xp": {
+                          "anyOf": [
+                            {
+                              "format": "integer",
+                              "default": 0,
+                              "type": "string"
+                            },
+                            {
+                              "type": "integer"
+                            }
+                          ]
+                        },
+                        "totalQuizCompletions": {
+                          "anyOf": [
+                            {
+                              "format": "integer",
+                              "default": 0,
+                              "type": "string"
+                            },
+                            {
+                              "type": "integer"
+                            }
+                          ]
+                        },
+                        "totalQuizCorrectAnswers": {
+                          "anyOf": [
+                            {
+                              "format": "integer",
+                              "default": 0,
+                              "type": "string"
+                            },
+                            {
+                              "type": "integer"
+                            }
+                          ]
+                        },
+                        "lastRewardedAt": {
+                          "nullable": true,
+                          "anyOf": [
+                            {
+                              "format": "date-time",
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "levelProgress": {
+                          "type": "object",
+                          "required": [
+                            "level",
+                            "currentLevelXp",
+                            "nextLevelXp",
+                            "xpIntoLevel",
+                            "xpToNextLevel"
+                          ],
+                          "properties": {
+                            "level": {
+                              "anyOf": [
+                                {
+                                  "format": "integer",
+                                  "default": 0,
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "integer"
+                                }
+                              ]
+                            },
+                            "currentLevelXp": {
+                              "anyOf": [
+                                {
+                                  "format": "integer",
+                                  "default": 0,
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "integer"
+                                }
+                              ]
+                            },
+                            "nextLevelXp": {
+                              "anyOf": [
+                                {
+                                  "format": "integer",
+                                  "default": 0,
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "integer"
+                                }
+                              ]
+                            },
+                            "xpIntoLevel": {
+                              "anyOf": [
+                                {
+                                  "format": "integer",
+                                  "default": 0,
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "integer"
+                                }
+                              ]
+                            },
+                            "xpToNextLevel": {
+                              "anyOf": [
+                                {
+                                  "format": "integer",
+                                  "default": 0,
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "integer"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        "achievements": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "id",
+                              "code",
+                              "name",
+                              "description",
+                              "iconUrl",
+                              "category",
+                              "rarity",
+                              "unlockedAt",
+                              "progress"
+                            ],
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "code": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "description": {
+                                "nullable": true,
+                                "anyOf": [
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "iconUrl": {
+                                "nullable": true,
+                                "anyOf": [
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "category": {
+                                "nullable": true,
+                                "anyOf": [
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "rarity": {
+                                "nullable": true,
+                                "anyOf": [
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "unlockedAt": {
+                                "format": "date-time",
+                                "type": "string"
+                              },
+                              "progress": {
+                                "anyOf": [
+                                  {
+                                    "format": "integer",
+                                    "default": 0,
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "integer"
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Response for status 404",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getProfileMeOverview"
+      }
+    },
+    "/progress/": {
+      "get": {
+        "tags": [
+          "Progress"
+        ],
+        "summary": "Get aggregated user progress",
+        "responses": {
+          "200": {
+            "description": "Response for status 200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "xp",
+                    "totalQuizCompletions",
+                    "totalQuizCorrectAnswers",
+                    "lastRewardedAt",
+                    "levelProgress",
+                    "achievements"
+                  ],
+                  "properties": {
+                    "xp": {
+                      "anyOf": [
+                        {
+                          "format": "integer",
+                          "default": 0,
+                          "type": "string"
+                        },
+                        {
+                          "type": "integer"
+                        }
+                      ]
+                    },
+                    "totalQuizCompletions": {
+                      "anyOf": [
+                        {
+                          "format": "integer",
+                          "default": 0,
+                          "type": "string"
+                        },
+                        {
+                          "type": "integer"
+                        }
+                      ]
+                    },
+                    "totalQuizCorrectAnswers": {
+                      "anyOf": [
+                        {
+                          "format": "integer",
+                          "default": 0,
+                          "type": "string"
+                        },
+                        {
+                          "type": "integer"
+                        }
+                      ]
+                    },
+                    "lastRewardedAt": {
+                      "nullable": true,
+                      "anyOf": [
+                        {
+                          "format": "date-time",
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "levelProgress": {
+                      "type": "object",
+                      "required": [
+                        "level",
+                        "currentLevelXp",
+                        "nextLevelXp",
+                        "xpIntoLevel",
+                        "xpToNextLevel"
+                      ],
+                      "properties": {
+                        "level": {
+                          "anyOf": [
+                            {
+                              "format": "integer",
+                              "default": 0,
+                              "type": "string"
+                            },
+                            {
+                              "type": "integer"
+                            }
+                          ]
+                        },
+                        "currentLevelXp": {
+                          "anyOf": [
+                            {
+                              "format": "integer",
+                              "default": 0,
+                              "type": "string"
+                            },
+                            {
+                              "type": "integer"
+                            }
+                          ]
+                        },
+                        "nextLevelXp": {
+                          "anyOf": [
+                            {
+                              "format": "integer",
+                              "default": 0,
+                              "type": "string"
+                            },
+                            {
+                              "type": "integer"
+                            }
+                          ]
+                        },
+                        "xpIntoLevel": {
+                          "anyOf": [
+                            {
+                              "format": "integer",
+                              "default": 0,
+                              "type": "string"
+                            },
+                            {
+                              "type": "integer"
+                            }
+                          ]
+                        },
+                        "xpToNextLevel": {
+                          "anyOf": [
+                            {
+                              "format": "integer",
+                              "default": 0,
+                              "type": "string"
+                            },
+                            {
+                              "type": "integer"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "achievements": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "code",
+                          "name",
+                          "description",
+                          "iconUrl",
+                          "category",
+                          "rarity",
+                          "unlockedAt",
+                          "progress"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "code": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "nullable": true,
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "iconUrl": {
+                            "nullable": true,
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "category": {
+                            "nullable": true,
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "rarity": {
+                            "nullable": true,
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "unlockedAt": {
+                            "format": "date-time",
+                            "type": "string"
+                          },
+                          "progress": {
+                            "anyOf": [
+                              {
+                                "format": "integer",
+                                "default": 0,
+                                "type": "string"
+                              },
+                              {
+                                "type": "integer"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Response for status 404",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getProgress"
+      }
+    },
+    "/progress/achievements": {
+      "get": {
+        "tags": [
+          "Progress"
+        ],
+        "summary": "List unlocked achievements",
+        "responses": {
+          "200": {
+            "description": "Response for status 200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "code",
+                      "name",
+                      "description",
+                      "iconUrl",
+                      "category",
+                      "rarity",
+                      "unlockedAt",
+                      "progress"
+                    ],
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "code": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "nullable": true,
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "iconUrl": {
+                        "nullable": true,
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "category": {
+                        "nullable": true,
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "rarity": {
+                        "nullable": true,
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "unlockedAt": {
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "progress": {
+                        "anyOf": [
+                          {
+                            "format": "integer",
+                            "default": 0,
+                            "type": "string"
+                          },
+                          {
+                            "type": "integer"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Response for status 404",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getProgressAchievements"
       }
     },
     "/quizzes/": {
@@ -1079,6 +1922,303 @@
         "operationId": "getQuizzesByQuizId"
       }
     },
+    "/quizzes/{quizId}/results/{attemptId}": {
+      "get": {
+        "tags": [
+          "Quiz"
+        ],
+        "summary": "Get completed quiz result",
+        "parameters": [
+          {
+            "name": "quizId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "attemptId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for status 200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "attemptId",
+                    "quizId",
+                    "score",
+                    "totalQuestions",
+                    "correctAnswers",
+                    "wrongAnswers",
+                    "accuracyPercent",
+                    "completedAt",
+                    "rewards"
+                  ],
+                  "properties": {
+                    "attemptId": {
+                      "type": "string"
+                    },
+                    "quizId": {
+                      "type": "string"
+                    },
+                    "score": {
+                      "anyOf": [
+                        {
+                          "format": "integer",
+                          "default": 0,
+                          "type": "string"
+                        },
+                        {
+                          "type": "integer"
+                        }
+                      ]
+                    },
+                    "totalQuestions": {
+                      "anyOf": [
+                        {
+                          "format": "integer",
+                          "default": 0,
+                          "type": "string"
+                        },
+                        {
+                          "type": "integer"
+                        }
+                      ]
+                    },
+                    "correctAnswers": {
+                      "anyOf": [
+                        {
+                          "format": "integer",
+                          "default": 0,
+                          "type": "string"
+                        },
+                        {
+                          "type": "integer"
+                        }
+                      ]
+                    },
+                    "wrongAnswers": {
+                      "anyOf": [
+                        {
+                          "format": "integer",
+                          "default": 0,
+                          "type": "string"
+                        },
+                        {
+                          "type": "integer"
+                        }
+                      ]
+                    },
+                    "accuracyPercent": {
+                      "anyOf": [
+                        {
+                          "format": "integer",
+                          "default": 0,
+                          "type": "string"
+                        },
+                        {
+                          "type": "integer"
+                        }
+                      ]
+                    },
+                    "completedAt": {
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "rewards": {
+                      "type": "object",
+                      "required": [
+                        "gainedXp",
+                        "totalXp",
+                        "previousLevel",
+                        "currentLevel",
+                        "leveledUp",
+                        "unlockedAchievements"
+                      ],
+                      "properties": {
+                        "gainedXp": {
+                          "anyOf": [
+                            {
+                              "format": "integer",
+                              "default": 0,
+                              "type": "string"
+                            },
+                            {
+                              "type": "integer"
+                            }
+                          ]
+                        },
+                        "totalXp": {
+                          "anyOf": [
+                            {
+                              "format": "integer",
+                              "default": 0,
+                              "type": "string"
+                            },
+                            {
+                              "type": "integer"
+                            }
+                          ]
+                        },
+                        "previousLevel": {
+                          "anyOf": [
+                            {
+                              "format": "integer",
+                              "default": 0,
+                              "type": "string"
+                            },
+                            {
+                              "type": "integer"
+                            }
+                          ]
+                        },
+                        "currentLevel": {
+                          "anyOf": [
+                            {
+                              "format": "integer",
+                              "default": 0,
+                              "type": "string"
+                            },
+                            {
+                              "type": "integer"
+                            }
+                          ]
+                        },
+                        "leveledUp": {
+                          "type": "boolean"
+                        },
+                        "unlockedAchievements": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "id",
+                              "code",
+                              "name",
+                              "description",
+                              "iconUrl",
+                              "category",
+                              "rarity",
+                              "unlockedAt",
+                              "progress"
+                            ],
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "code": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "description": {
+                                "nullable": true,
+                                "anyOf": [
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "iconUrl": {
+                                "nullable": true,
+                                "anyOf": [
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "category": {
+                                "nullable": true,
+                                "anyOf": [
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "rarity": {
+                                "nullable": true,
+                                "anyOf": [
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "unlockedAt": {
+                                "format": "date-time",
+                                "type": "string"
+                              },
+                              "progress": {
+                                "anyOf": [
+                                  {
+                                    "format": "integer",
+                                    "default": 0,
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "integer"
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Response for status 404",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getQuizzesByQuizIdResultsByAttemptId"
+      }
+    },
     "/quizzes/{quizId}/questions/{questionId}/answer": {
       "post": {
         "tags": [
@@ -1160,7 +2300,8 @@
                     "fact",
                     "nextQuestionIndex",
                     "answeredQuestionIds",
-                    "progress"
+                    "progress",
+                    "completionResult"
                   ],
                   "properties": {
                     "isCorrect": {
@@ -1249,6 +2390,252 @@
                           ]
                         }
                       }
+                    },
+                    "completionResult": {
+                      "nullable": true,
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "required": [
+                            "attemptId",
+                            "quizId",
+                            "score",
+                            "totalQuestions",
+                            "correctAnswers",
+                            "wrongAnswers",
+                            "accuracyPercent",
+                            "completedAt",
+                            "rewards"
+                          ],
+                          "properties": {
+                            "attemptId": {
+                              "type": "string"
+                            },
+                            "quizId": {
+                              "type": "string"
+                            },
+                            "score": {
+                              "anyOf": [
+                                {
+                                  "format": "integer",
+                                  "default": 0,
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "integer"
+                                }
+                              ]
+                            },
+                            "totalQuestions": {
+                              "anyOf": [
+                                {
+                                  "format": "integer",
+                                  "default": 0,
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "integer"
+                                }
+                              ]
+                            },
+                            "correctAnswers": {
+                              "anyOf": [
+                                {
+                                  "format": "integer",
+                                  "default": 0,
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "integer"
+                                }
+                              ]
+                            },
+                            "wrongAnswers": {
+                              "anyOf": [
+                                {
+                                  "format": "integer",
+                                  "default": 0,
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "integer"
+                                }
+                              ]
+                            },
+                            "accuracyPercent": {
+                              "anyOf": [
+                                {
+                                  "format": "integer",
+                                  "default": 0,
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "integer"
+                                }
+                              ]
+                            },
+                            "completedAt": {
+                              "format": "date-time",
+                              "type": "string"
+                            },
+                            "rewards": {
+                              "type": "object",
+                              "required": [
+                                "gainedXp",
+                                "totalXp",
+                                "previousLevel",
+                                "currentLevel",
+                                "leveledUp",
+                                "unlockedAchievements"
+                              ],
+                              "properties": {
+                                "gainedXp": {
+                                  "anyOf": [
+                                    {
+                                      "format": "integer",
+                                      "default": 0,
+                                      "type": "string"
+                                    },
+                                    {
+                                      "type": "integer"
+                                    }
+                                  ]
+                                },
+                                "totalXp": {
+                                  "anyOf": [
+                                    {
+                                      "format": "integer",
+                                      "default": 0,
+                                      "type": "string"
+                                    },
+                                    {
+                                      "type": "integer"
+                                    }
+                                  ]
+                                },
+                                "previousLevel": {
+                                  "anyOf": [
+                                    {
+                                      "format": "integer",
+                                      "default": 0,
+                                      "type": "string"
+                                    },
+                                    {
+                                      "type": "integer"
+                                    }
+                                  ]
+                                },
+                                "currentLevel": {
+                                  "anyOf": [
+                                    {
+                                      "format": "integer",
+                                      "default": 0,
+                                      "type": "string"
+                                    },
+                                    {
+                                      "type": "integer"
+                                    }
+                                  ]
+                                },
+                                "leveledUp": {
+                                  "type": "boolean"
+                                },
+                                "unlockedAchievements": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "required": [
+                                      "id",
+                                      "code",
+                                      "name",
+                                      "description",
+                                      "iconUrl",
+                                      "category",
+                                      "rarity",
+                                      "unlockedAt",
+                                      "progress"
+                                    ],
+                                    "properties": {
+                                      "id": {
+                                        "type": "string"
+                                      },
+                                      "code": {
+                                        "type": "string"
+                                      },
+                                      "name": {
+                                        "type": "string"
+                                      },
+                                      "description": {
+                                        "nullable": true,
+                                        "anyOf": [
+                                          {
+                                            "type": "string"
+                                          },
+                                          {
+                                            "type": "null"
+                                          }
+                                        ]
+                                      },
+                                      "iconUrl": {
+                                        "nullable": true,
+                                        "anyOf": [
+                                          {
+                                            "type": "string"
+                                          },
+                                          {
+                                            "type": "null"
+                                          }
+                                        ]
+                                      },
+                                      "category": {
+                                        "nullable": true,
+                                        "anyOf": [
+                                          {
+                                            "type": "string"
+                                          },
+                                          {
+                                            "type": "null"
+                                          }
+                                        ]
+                                      },
+                                      "rarity": {
+                                        "nullable": true,
+                                        "anyOf": [
+                                          {
+                                            "type": "string"
+                                          },
+                                          {
+                                            "type": "null"
+                                          }
+                                        ]
+                                      },
+                                      "unlockedAt": {
+                                        "format": "date-time",
+                                        "type": "string"
+                                      },
+                                      "progress": {
+                                        "anyOf": [
+                                          {
+                                            "format": "integer",
+                                            "default": 0,
+                                            "type": "string"
+                                          },
+                                          {
+                                            "type": "integer"
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
                     }
                   }
                 }

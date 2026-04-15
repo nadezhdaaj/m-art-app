@@ -1,6 +1,8 @@
 import { t } from "elysia";
-import { __nullable__ } from "./__nullable__";
+
 import { __transformDate__ } from "./__transformDate__";
+
+import { __nullable__ } from "./__nullable__";
 
 export const QuizAttemptAnswerPlain = t.Object(
   {
@@ -22,7 +24,11 @@ export const QuizAttemptAnswerRelations = t.Object(
         profileId: t.String(),
         quizId: t.String(),
         status: t.Union(
-          [t.Literal("IN_PROGRESS"), t.Literal("COMPLETED"), t.Literal("ABANDONED")],
+          [
+            t.Literal("IN_PROGRESS"),
+            t.Literal("COMPLETED"),
+            t.Literal("ABANDONED"),
+          ],
           { additionalProperties: false },
         ),
         currentQuestionIndex: t.Integer(),
@@ -142,8 +148,14 @@ export const QuizAttemptAnswerWhereUnique = t.Recursive(
         ),
         t.Partial(
           t.Object({
-            AND: t.Union([Self, t.Array(Self, { additionalProperties: false })]),
-            NOT: t.Union([Self, t.Array(Self, { additionalProperties: false })]),
+            AND: t.Union([
+              Self,
+              t.Array(Self, { additionalProperties: false }),
+            ]),
+            NOT: t.Union([
+              Self,
+              t.Array(Self, { additionalProperties: false }),
+            ]),
             OR: t.Array(Self, { additionalProperties: false }),
           }),
           { additionalProperties: false },
@@ -184,7 +196,10 @@ export const QuizAttemptAnswerSelect = t.Partial(
 );
 
 export const QuizAttemptAnswerInclude = t.Partial(
-  t.Object({ attempt: t.Boolean(), _count: t.Boolean() }, { additionalProperties: false }),
+  t.Object(
+    { attempt: t.Boolean(), _count: t.Boolean() },
+    { additionalProperties: false },
+  ),
 );
 
 export const QuizAttemptAnswerOrderBy = t.Partial(
@@ -213,9 +228,10 @@ export const QuizAttemptAnswerOrderBy = t.Partial(
   ),
 );
 
-export const QuizAttemptAnswer = t.Composite([QuizAttemptAnswerPlain, QuizAttemptAnswerRelations], {
-  additionalProperties: false,
-});
+export const QuizAttemptAnswer = t.Composite(
+  [QuizAttemptAnswerPlain, QuizAttemptAnswerRelations],
+  { additionalProperties: false },
+);
 
 export const QuizAttemptAnswerInputCreate = t.Composite(
   [QuizAttemptAnswerPlainInputCreate, QuizAttemptAnswerRelationsInputCreate],

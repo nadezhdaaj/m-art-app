@@ -19,6 +19,15 @@ public class Navigation : MonoBehaviour
     public float moveSpeed = 8f;
     public float iconScale = 1.2f;
 
+    void Start()
+    {
+        if (PlayerPrefs.GetInt(OpenARScene.OpenHomeOnMainStageKey, 0) == 1)
+        {
+            PlayerPrefs.DeleteKey(OpenARScene.OpenHomeOnMainStageKey);
+            OpenHome();
+        }
+    }
+
     public void OpenHome()
     {
         SetScreen(homeScreen);

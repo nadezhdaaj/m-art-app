@@ -1,6 +1,8 @@
 import { t } from "elysia";
-import { __nullable__ } from "./__nullable__";
+
 import { __transformDate__ } from "./__transformDate__";
+
+import { __nullable__ } from "./__nullable__";
 
 export const VerificationPlain = t.Object(
   {
@@ -14,7 +16,10 @@ export const VerificationPlain = t.Object(
   { additionalProperties: false },
 );
 
-export const VerificationRelations = t.Object({}, { additionalProperties: false });
+export const VerificationRelations = t.Object(
+  {},
+  { additionalProperties: false },
+);
 
 export const VerificationPlainInputCreate = t.Object(
   { identifier: t.String(), value: t.String(), expiresAt: t.Date() },
@@ -30,7 +35,10 @@ export const VerificationPlainInputUpdate = t.Object(
   { additionalProperties: false },
 );
 
-export const VerificationRelationsInputCreate = t.Object({}, { additionalProperties: false });
+export const VerificationRelationsInputCreate = t.Object(
+  {},
+  { additionalProperties: false },
+);
 
 export const VerificationRelationsInputUpdate = t.Partial(
   t.Object({}, { additionalProperties: false }),
@@ -61,16 +69,23 @@ export const VerificationWhereUnique = t.Recursive(
   (Self) =>
     t.Intersect(
       [
-        t.Partial(t.Object({ id: t.String() }, { additionalProperties: false }), {
-          additionalProperties: false,
-        }),
+        t.Partial(
+          t.Object({ id: t.String() }, { additionalProperties: false }),
+          { additionalProperties: false },
+        ),
         t.Union([t.Object({ id: t.String() })], {
           additionalProperties: false,
         }),
         t.Partial(
           t.Object({
-            AND: t.Union([Self, t.Array(Self, { additionalProperties: false })]),
-            NOT: t.Union([Self, t.Array(Self, { additionalProperties: false })]),
+            AND: t.Union([
+              Self,
+              t.Array(Self, { additionalProperties: false }),
+            ]),
+            NOT: t.Union([
+              Self,
+              t.Array(Self, { additionalProperties: false }),
+            ]),
             OR: t.Array(Self, { additionalProperties: false }),
           }),
           { additionalProperties: false },
@@ -139,9 +154,10 @@ export const VerificationOrderBy = t.Partial(
   ),
 );
 
-export const Verification = t.Composite([VerificationPlain, VerificationRelations], {
-  additionalProperties: false,
-});
+export const Verification = t.Composite(
+  [VerificationPlain, VerificationRelations],
+  { additionalProperties: false },
+);
 
 export const VerificationInputCreate = t.Composite(
   [VerificationPlainInputCreate, VerificationRelationsInputCreate],

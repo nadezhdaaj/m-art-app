@@ -50,7 +50,7 @@ API будет доступен на:
 http://localhost:3000
 ```
 
-## 5. Остановить окружение
+## 5. Остановить окружение 
 
 ```powershell
 docker compose down

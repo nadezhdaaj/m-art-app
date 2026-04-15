@@ -1,6 +1,8 @@
 import { t } from "elysia";
-import { __nullable__ } from "./__nullable__";
+
 import { __transformDate__ } from "./__transformDate__";
+
+import { __nullable__ } from "./__nullable__";
 
 export const NewsPostPlain = t.Object(
   {
@@ -10,9 +12,10 @@ export const NewsPostPlain = t.Object(
     excerpt: __nullable__(t.String()),
     coverImageUrl: __nullable__(t.String()),
     content: t.String(),
-    status: t.Union([t.Literal("DRAFT"), t.Literal("PUBLISHED"), t.Literal("ARCHIVED")], {
-      additionalProperties: false,
-    }),
+    status: t.Union(
+      [t.Literal("DRAFT"), t.Literal("PUBLISHED"), t.Literal("ARCHIVED")],
+      { additionalProperties: false },
+    ),
     sourceType: t.Union([t.Literal("MANUAL"), t.Literal("IMPORT")], {
       additionalProperties: false,
     }),
@@ -35,9 +38,10 @@ export const NewsPostPlainInputCreate = t.Object(
     coverImageUrl: t.Optional(__nullable__(t.String())),
     content: t.String(),
     status: t.Optional(
-      t.Union([t.Literal("DRAFT"), t.Literal("PUBLISHED"), t.Literal("ARCHIVED")], {
-        additionalProperties: false,
-      }),
+      t.Union(
+        [t.Literal("DRAFT"), t.Literal("PUBLISHED"), t.Literal("ARCHIVED")],
+        { additionalProperties: false },
+      ),
     ),
     sourceType: t.Optional(
       t.Union([t.Literal("MANUAL"), t.Literal("IMPORT")], {
@@ -58,9 +62,10 @@ export const NewsPostPlainInputUpdate = t.Object(
     coverImageUrl: t.Optional(__nullable__(t.String())),
     content: t.Optional(t.String()),
     status: t.Optional(
-      t.Union([t.Literal("DRAFT"), t.Literal("PUBLISHED"), t.Literal("ARCHIVED")], {
-        additionalProperties: false,
-      }),
+      t.Union(
+        [t.Literal("DRAFT"), t.Literal("PUBLISHED"), t.Literal("ARCHIVED")],
+        { additionalProperties: false },
+      ),
     ),
     sourceType: t.Optional(
       t.Union([t.Literal("MANUAL"), t.Literal("IMPORT")], {
@@ -73,7 +78,10 @@ export const NewsPostPlainInputUpdate = t.Object(
   { additionalProperties: false },
 );
 
-export const NewsPostRelationsInputCreate = t.Object({}, { additionalProperties: false });
+export const NewsPostRelationsInputCreate = t.Object(
+  {},
+  { additionalProperties: false },
+);
 
 export const NewsPostRelationsInputUpdate = t.Partial(
   t.Object({}, { additionalProperties: false }),
@@ -93,9 +101,10 @@ export const NewsPostWhere = t.Partial(
           excerpt: t.String(),
           coverImageUrl: t.String(),
           content: t.String(),
-          status: t.Union([t.Literal("DRAFT"), t.Literal("PUBLISHED"), t.Literal("ARCHIVED")], {
-            additionalProperties: false,
-          }),
+          status: t.Union(
+            [t.Literal("DRAFT"), t.Literal("PUBLISHED"), t.Literal("ARCHIVED")],
+            { additionalProperties: false },
+          ),
           sourceType: t.Union([t.Literal("MANUAL"), t.Literal("IMPORT")], {
             additionalProperties: false,
           }),
@@ -115,16 +124,27 @@ export const NewsPostWhereUnique = t.Recursive(
   (Self) =>
     t.Intersect(
       [
-        t.Partial(t.Object({ id: t.String(), slug: t.String() }, { additionalProperties: false }), {
-          additionalProperties: false,
-        }),
-        t.Union([t.Object({ id: t.String() }), t.Object({ slug: t.String() })], {
-          additionalProperties: false,
-        }),
+        t.Partial(
+          t.Object(
+            { id: t.String(), slug: t.String() },
+            { additionalProperties: false },
+          ),
+          { additionalProperties: false },
+        ),
+        t.Union(
+          [t.Object({ id: t.String() }), t.Object({ slug: t.String() })],
+          { additionalProperties: false },
+        ),
         t.Partial(
           t.Object({
-            AND: t.Union([Self, t.Array(Self, { additionalProperties: false })]),
-            NOT: t.Union([Self, t.Array(Self, { additionalProperties: false })]),
+            AND: t.Union([
+              Self,
+              t.Array(Self, { additionalProperties: false }),
+            ]),
+            NOT: t.Union([
+              Self,
+              t.Array(Self, { additionalProperties: false }),
+            ]),
             OR: t.Array(Self, { additionalProperties: false }),
           }),
           { additionalProperties: false },
@@ -138,9 +158,14 @@ export const NewsPostWhereUnique = t.Recursive(
               excerpt: t.String(),
               coverImageUrl: t.String(),
               content: t.String(),
-              status: t.Union([t.Literal("DRAFT"), t.Literal("PUBLISHED"), t.Literal("ARCHIVED")], {
-                additionalProperties: false,
-              }),
+              status: t.Union(
+                [
+                  t.Literal("DRAFT"),
+                  t.Literal("PUBLISHED"),
+                  t.Literal("ARCHIVED"),
+                ],
+                { additionalProperties: false },
+              ),
               sourceType: t.Union([t.Literal("MANUAL"), t.Literal("IMPORT")], {
                 additionalProperties: false,
               }),
