@@ -1,8 +1,6 @@
 import { t } from "elysia";
-
-import { __transformDate__ } from "./__transformDate__";
-
 import { __nullable__ } from "./__nullable__";
+import { __transformDate__ } from "./__transformDate__";
 
 export const QuizQuestionPlain = t.Object(
   {
@@ -29,10 +27,9 @@ export const QuizQuestionRelations = t.Object(
         type: t.Union([t.Literal("MULTIPLE_CHOICE"), t.Literal("YES_NO")], {
           additionalProperties: false,
         }),
-        status: t.Union(
-          [t.Literal("DRAFT"), t.Literal("PUBLISHED"), t.Literal("ARCHIVED")],
-          { additionalProperties: false },
-        ),
+        status: t.Union([t.Literal("DRAFT"), t.Literal("PUBLISHED"), t.Literal("ARCHIVED")], {
+          additionalProperties: false,
+        }),
         createdAt: t.Date(),
         updatedAt: t.Date(),
       },
@@ -178,23 +175,16 @@ export const QuizQuestionWhereUnique = t.Recursive(
   (Self) =>
     t.Intersect(
       [
-        t.Partial(
-          t.Object({ id: t.String() }, { additionalProperties: false }),
-          { additionalProperties: false },
-        ),
+        t.Partial(t.Object({ id: t.String() }, { additionalProperties: false }), {
+          additionalProperties: false,
+        }),
         t.Union([t.Object({ id: t.String() })], {
           additionalProperties: false,
         }),
         t.Partial(
           t.Object({
-            AND: t.Union([
-              Self,
-              t.Array(Self, { additionalProperties: false }),
-            ]),
-            NOT: t.Union([
-              Self,
-              t.Array(Self, { additionalProperties: false }),
-            ]),
+            AND: t.Union([Self, t.Array(Self, { additionalProperties: false })]),
+            NOT: t.Union([Self, t.Array(Self, { additionalProperties: false })]),
             OR: t.Array(Self, { additionalProperties: false }),
           }),
           { additionalProperties: false },
@@ -273,10 +263,9 @@ export const QuizQuestionOrderBy = t.Partial(
   ),
 );
 
-export const QuizQuestion = t.Composite(
-  [QuizQuestionPlain, QuizQuestionRelations],
-  { additionalProperties: false },
-);
+export const QuizQuestion = t.Composite([QuizQuestionPlain, QuizQuestionRelations], {
+  additionalProperties: false,
+});
 
 export const QuizQuestionInputCreate = t.Composite(
   [QuizQuestionPlainInputCreate, QuizQuestionRelationsInputCreate],

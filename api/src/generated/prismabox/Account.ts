@@ -1,8 +1,6 @@
 import { t } from "elysia";
-
-import { __transformDate__ } from "./__transformDate__";
-
 import { __nullable__ } from "./__nullable__";
+import { __transformDate__ } from "./__transformDate__";
 
 export const AccountPlain = t.Object(
   {
@@ -162,14 +160,8 @@ export const AccountWhereUnique = t.Recursive(
         ),
         t.Partial(
           t.Object({
-            AND: t.Union([
-              Self,
-              t.Array(Self, { additionalProperties: false }),
-            ]),
-            NOT: t.Union([
-              Self,
-              t.Array(Self, { additionalProperties: false }),
-            ]),
+            AND: t.Union([Self, t.Array(Self, { additionalProperties: false })]),
+            NOT: t.Union([Self, t.Array(Self, { additionalProperties: false })]),
             OR: t.Array(Self, { additionalProperties: false }),
           }),
           { additionalProperties: false },
@@ -224,10 +216,7 @@ export const AccountSelect = t.Partial(
 );
 
 export const AccountInclude = t.Partial(
-  t.Object(
-    { user: t.Boolean(), _count: t.Boolean() },
-    { additionalProperties: false },
-  ),
+  t.Object({ user: t.Boolean(), _count: t.Boolean() }, { additionalProperties: false }),
 );
 
 export const AccountOrderBy = t.Partial(

@@ -288,3 +288,36 @@
 - справочник достижений и факты их выдачи.
 
 Такое разделение позволяет не смешивать игровой flow викторины, агрегаты прогресса и наградный пайплайн, а также упрощает дальнейшее расширение системы под новые источники XP.
+
+## News Module Addendum
+
+### `NewsPostStatus`
+
+- `DRAFT`
+- `PUBLISHED`
+- `ARCHIVED`
+
+### `NewsPostSourceType`
+
+- `MANUAL`
+- `IMPORT`
+
+### Table `news_post`
+
+The `news_post` table stores museum blog/news articles and supports both manual entry and future imports from external sources or an admin panel.
+
+| Column             | Type                 | Description                                               |
+| ------------------ | -------------------- | --------------------------------------------------------- |
+| `id`               | `String`             | Primary key of the news post.                             |
+| `slug`             | `String`             | Unique slug used in API routes.                           |
+| `title`            | `String`             | Article title.                                            |
+| `excerpt`          | `String?`            | Short summary for the news feed.                          |
+| `coverImageUrl`    | `String?`            | Main article image.                                       |
+| `content`          | `String`             | Full article text.                                        |
+| `status`           | `NewsPostStatus`     | Publication lifecycle status.                             |
+| `sourceType`       | `NewsPostSourceType` | Whether the article was created manually or imported.     |
+| `sourceUrl`        | `String?`            | External source URL for future parser/admin integrations. |
+| `sourceExternalId` | `String?`            | External identifier in a source system.                   |
+| `publishedAt`      | `DateTime?`          | Publication timestamp used for sorting published items.   |
+| `createdAt`        | `DateTime`           | Record creation time.                                     |
+| `updatedAt`        | `DateTime`           | Record update time.                                       |

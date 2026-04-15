@@ -1,3 +1,5 @@
+export * from "./NewsPostStatus";
+export * from "./NewsPostSourceType";
 export * from "./QuizType";
 export * from "./QuizStatus";
 export * from "./QuizAttemptStatus";
@@ -6,6 +8,7 @@ export * from "./ProgressEventType";
 export * from "./AchievementRuleType";
 export * from "./User";
 export * from "./Profile";
+export * from "./NewsPost";
 export * from "./Quiz";
 export * from "./QuizQuestion";
 export * from "./QuizAnswer";

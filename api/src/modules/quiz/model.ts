@@ -1,5 +1,5 @@
 import { t, type UnwrapSchema } from "elysia";
-import { progressModels } from "../progress/model";
+import { ProgressModels, RewardSummary } from "../progress/model";
 
 const QuizProgress = t.Object({
   currentQuestionIndex: t.Integer(),
@@ -75,7 +75,7 @@ const QuizAnswerResult = t.Object({
       wrongAnswers: t.Integer(),
       accuracyPercent: t.Integer(),
       completedAt: t.String({ format: "date-time" }),
-      rewards: progressModels.RewardSummary,
+      rewards: ProgressModels.RewardSummary,
     }),
   ),
 });
@@ -90,7 +90,7 @@ const QuizCompletionResult = t.Object({
   wrongAnswers: t.Integer(),
   accuracyPercent: t.Integer(),
   completedAt: t.String({ format: "date-time" }),
-  rewards: progressModels.RewardSummary,
+  rewards: ProgressModels.RewardSummary,
 });
 export type QuizCompletionResult = UnwrapSchema<typeof QuizCompletionResult>;
 
@@ -104,3 +104,29 @@ export const QuizModels = {
   QuizCompletionResult,
   QuizList: t.Array(QuizSummary),
 } as const;
+
+type QuizAttemptResultSource = {
+  id: string;
+  quizId: string;
+  score: number;
+  totalQuestions: number;
+  correctAnswers: number;
+  wrongAnswers: number;
+  accuracyPercent: number;
+  finishedAt: Date | null;
+};
+
+export const toQuizCompletionResult = (
+  attempt: QuizAttemptResultSource,
+  rewards: RewardSummary,
+): QuizCompletionResult => ({
+  attemptId: attempt.id,
+  quizId: attempt.quizId,
+  score: attempt.score,
+  totalQuestions: attempt.totalQuestions,
+  correctAnswers: attempt.correctAnswers,
+  wrongAnswers: attempt.wrongAnswers,
+  accuracyPercent: attempt.accuracyPercent,
+  completedAt: attempt.finishedAt?.toISOString() ?? new Date().toISOString(),
+  rewards,
+});

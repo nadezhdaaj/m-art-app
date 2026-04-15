@@ -1,6 +1,7 @@
 import openapi from "@elysiajs/openapi";
 import { Elysia } from "elysia";
 import { AuthOpenAPI, authPlugin } from "./modules/auth";
+import { newsPlugin } from "./modules/news";
 import { profilePlugin } from "./modules/profile";
 import { progressPlugin } from "./modules/progress";
 import { quizPlugin } from "./modules/quiz";
@@ -21,6 +22,7 @@ const app = new Elysia()
     }),
   )
   .use(authPlugin)
+  .use(newsPlugin)
   .use(profilePlugin)
   .use(progressPlugin)
   .use(quizPlugin)

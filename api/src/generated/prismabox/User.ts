@@ -1,8 +1,6 @@
 import { t } from "elysia";
-
-import { __transformDate__ } from "./__transformDate__";
-
 import { __nullable__ } from "./__nullable__";
+import { __transformDate__ } from "./__transformDate__";
 
 export const UserPlain = t.Object(
   {
@@ -244,26 +242,16 @@ export const UserWhereUnique = t.Recursive(
     t.Intersect(
       [
         t.Partial(
-          t.Object(
-            { id: t.String(), email: t.String() },
-            { additionalProperties: false },
-          ),
+          t.Object({ id: t.String(), email: t.String() }, { additionalProperties: false }),
           { additionalProperties: false },
         ),
-        t.Union(
-          [t.Object({ id: t.String() }), t.Object({ email: t.String() })],
-          { additionalProperties: false },
-        ),
+        t.Union([t.Object({ id: t.String() }), t.Object({ email: t.String() })], {
+          additionalProperties: false,
+        }),
         t.Partial(
           t.Object({
-            AND: t.Union([
-              Self,
-              t.Array(Self, { additionalProperties: false }),
-            ]),
-            NOT: t.Union([
-              Self,
-              t.Array(Self, { additionalProperties: false }),
-            ]),
+            AND: t.Union([Self, t.Array(Self, { additionalProperties: false })]),
+            NOT: t.Union([Self, t.Array(Self, { additionalProperties: false })]),
             OR: t.Array(Self, { additionalProperties: false }),
           }),
           { additionalProperties: false },
@@ -352,12 +340,10 @@ export const User = t.Composite([UserPlain, UserRelations], {
   additionalProperties: false,
 });
 
-export const UserInputCreate = t.Composite(
-  [UserPlainInputCreate, UserRelationsInputCreate],
-  { additionalProperties: false },
-);
+export const UserInputCreate = t.Composite([UserPlainInputCreate, UserRelationsInputCreate], {
+  additionalProperties: false,
+});
 
-export const UserInputUpdate = t.Composite(
-  [UserPlainInputUpdate, UserRelationsInputUpdate],
-  { additionalProperties: false },
-);
+export const UserInputUpdate = t.Composite([UserPlainInputUpdate, UserRelationsInputUpdate], {
+  additionalProperties: false,
+});

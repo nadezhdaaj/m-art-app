@@ -1,5 +1,11 @@
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient, QuizStatus, QuizType } from "../src/generated/prisma/client";
+import {
+  NewsPostSourceType,
+  NewsPostStatus,
+  PrismaClient,
+  QuizStatus,
+  QuizType,
+} from "../src/generated/prisma/client";
 
 const databaseUrl = process.env.DATABASE_URL;
 
@@ -193,6 +199,43 @@ const achievementSeeds = [
   },
 ];
 
+const newsPostSeeds = [
+  {
+    slug: "mart-spring-residency-open",
+    title: "Весенняя арт-резиденция M'ART открывает новый набор",
+    excerpt:
+      "Музей объявил набор художников в арт-резиденцию. Участники смогут работать с коллекцией, кураторами и публичной программой музея.",
+    coverImageUrl: null,
+    content: `Музей M'ART открывает новый сезон арт-резиденции и приглашает художников подать заявки на участие.
+
+В течение программы участники смогут работать с выставочными пространствами музея, исследовать коллекцию и готовить собственные проекты для публичного показа.
+
+На первом этапе новостной раздел заполняется вручную, но структура уже готова для будущего импорта материалов из внешних источников и административной панели.`,
+    status: NewsPostStatus.PUBLISHED,
+    sourceType: NewsPostSourceType.MANUAL,
+    sourceUrl: null,
+    sourceExternalId: null,
+    publishedAt: new Date("2026-04-01T09:00:00.000Z"),
+  },
+  {
+    slug: "mart-family-weekend-program",
+    title: "Семейные выходные в музее: лекции, мастер-классы и экскурсии",
+    excerpt:
+      "В ближайшие выходные музей проведет семейную программу с интерактивными экскурсиями и творческими занятиями для детей и родителей.",
+    coverImageUrl: null,
+    content: `В музее M'ART стартует семейная программа выходного дня.
+
+Посетителей ждут экскурсии по экспозиции, короткие лекции о современном искусстве и практические мастер-классы, где можно создать собственную работу по мотивам увиденного.
+
+Новостной модуль хранит полную статью, фотографию и дополнительные поля источника, чтобы в дальнейшем публикации можно было получать автоматически.`,
+    status: NewsPostStatus.PUBLISHED,
+    sourceType: NewsPostSourceType.MANUAL,
+    sourceUrl: null,
+    sourceExternalId: null,
+    publishedAt: new Date("2026-04-10T12:00:00.000Z"),
+  },
+];
+
 const main = async () => {
   await prisma.$transaction(async (tx) => {
     const quiz = await tx.quiz.upsert({
@@ -263,9 +306,27 @@ const main = async () => {
         },
       });
     }
+
+    for (const newsPost of newsPostSeeds) {
+      await tx.newsPost.upsert({
+        where: { slug: newsPost.slug },
+        create: newsPost,
+        update: {
+          title: newsPost.title,
+          excerpt: newsPost.excerpt,
+          coverImageUrl: newsPost.coverImageUrl,
+          content: newsPost.content,
+          status: newsPost.status,
+          sourceType: newsPost.sourceType,
+          sourceUrl: newsPost.sourceUrl,
+          sourceExternalId: newsPost.sourceExternalId,
+          publishedAt: newsPost.publishedAt,
+        },
+      });
+    }
   });
 
-  console.log(`Seeded quiz and achievements: ${quizSeed.slug}`);
+  console.log(`Seeded quiz, achievements and news posts: ${quizSeed.slug}`);
 };
 
 main()

@@ -1,8 +1,6 @@
 import { t } from "elysia";
-
-import { __transformDate__ } from "./__transformDate__";
-
 import { __nullable__ } from "./__nullable__";
+import { __transformDate__ } from "./__transformDate__";
 
 export const UserAchievementPlain = t.Object(
   {
@@ -192,14 +190,8 @@ export const UserAchievementWhereUnique = t.Recursive(
         ),
         t.Partial(
           t.Object({
-            AND: t.Union([
-              Self,
-              t.Array(Self, { additionalProperties: false }),
-            ]),
-            NOT: t.Union([
-              Self,
-              t.Array(Self, { additionalProperties: false }),
-            ]),
+            AND: t.Union([Self, t.Array(Self, { additionalProperties: false })]),
+            NOT: t.Union([Self, t.Array(Self, { additionalProperties: false })]),
             OR: t.Array(Self, { additionalProperties: false }),
           }),
           { additionalProperties: false },
@@ -283,10 +275,9 @@ export const UserAchievementOrderBy = t.Partial(
   ),
 );
 
-export const UserAchievement = t.Composite(
-  [UserAchievementPlain, UserAchievementRelations],
-  { additionalProperties: false },
-);
+export const UserAchievement = t.Composite([UserAchievementPlain, UserAchievementRelations], {
+  additionalProperties: false,
+});
 
 export const UserAchievementInputCreate = t.Composite(
   [UserAchievementPlainInputCreate, UserAchievementRelationsInputCreate],

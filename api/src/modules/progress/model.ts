@@ -47,7 +47,7 @@ const ProgressResponse = t.Composite([
 ]);
 export type ProgressResponse = UnwrapSchema<typeof ProgressResponse>;
 
-export const progressModels = {
+export const ProgressModels = {
   AchievementSummary,
   RewardSummary,
   LevelProgress,

@@ -1,24 +1,34 @@
 import { Elysia } from "elysia";
 import { ErrorDto } from "@/lib/http";
 import { protectedPlugin } from "../auth";
-import { profileModels } from "./model";
-import { ProfileService } from "./service";
+import { ProfileModels } from "./model";
+import { getOverview } from "./services/get-overview";
+import { getProfile, updateProfile } from "./services";
 
 export const profilePlugin = new Elysia({ prefix: "/profile", detail: { tags: ["Profile"] } })
   .use(protectedPlugin)
-  .get("/me", ({ user }) => ProfileService.getProfile(user.id), {
+  .get("/me", ({ user }) => getProfile(user.id), {
     response: {
-      200: profileModels.profile,
+      200: ProfileModels.Profile,
       404: ErrorDto,
     },
     detail: {
       summary: "Get my profile",
     },
   })
-  .patch("/me", ({ user, body }) => ProfileService.updateProfile(user.id, body), {
-    body: profileModels.updateProfileBody,
+  .get("/me/overview", ({ user }) => getOverview(user.id), {
     response: {
-      200: profileModels.profile,
+      200: ProfileModels.ProfileOverview,
+      404: ErrorDto,
+    },
+    detail: {
+      summary: "Get my profile overview with progression",
+    },
+  })
+  .patch("/me", ({ user, body }) => updateProfile(user.id, body), {
+    body: ProfileModels.UpdateProfileBody,
+    response: {
+      200: ProfileModels.Profile,
       400: ErrorDto,
     },
     detail: {

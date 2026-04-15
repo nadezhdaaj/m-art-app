@@ -48,6 +48,37 @@ model Profile {
   @@map("profile")
 }
 
+enum NewsPostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum NewsPostSourceType {
+  MANUAL
+  IMPORT
+}
+
+model NewsPost {
+  id               String             @id @default(cuid())
+  slug             String             @unique
+  title            String
+  excerpt          String?
+  coverImageUrl    String?
+  content          String
+  status           NewsPostStatus     @default(DRAFT)
+  sourceType       NewsPostSourceType @default(MANUAL)
+  sourceUrl        String?
+  sourceExternalId String?
+  publishedAt      DateTime?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+
+  @@index([status, publishedAt(sort: Desc)])
+  @@index([sourceType])
+  @@map("news_post")
+}
+
 enum QuizType {
   MULTIPLE_CHOICE
   YES_NO

@@ -1,26 +1,23 @@
 import { Elysia } from "elysia";
 import { ErrorDto } from "@/lib/http";
 import { protectedPlugin } from "../auth";
-import { progressModels } from "./model";
-import { ProgressService } from "./service";
+import { ProgressModels } from "./model";
+import { getProgress, getAchievements } from "./services";
 
-export const progressPlugin = new Elysia({
-  prefix: "/progress",
-  detail: { tags: ["Progress"] },
-})
+export const progressPlugin = new Elysia({ prefix: "/progress", detail: { tags: ["Progress"] } })
   .use(protectedPlugin)
-  .get("/", ({ user }) => ProgressService.getProgress(user.id), {
+  .get("/", ({ user }) => getProgress(user.id), {
     response: {
-      200: progressModels.ProgressResponse,
+      200: ProgressModels.ProgressResponse,
       404: ErrorDto,
     },
     detail: {
       summary: "Get aggregated user progress",
     },
   })
-  .get("/achievements", ({ user }) => ProgressService.getAchievements(user.id), {
+  .get("/achievements", ({ user }) => getAchievements(user.id), {
     response: {
-      200: progressModels.AchievementList,
+      200: ProgressModels.AchievementList,
       404: ErrorDto,
     },
     detail: {
