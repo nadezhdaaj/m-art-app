@@ -13,6 +13,10 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 const JWT_SECRET = process.env.JWT_SECRET || "mart-dev-secret-change-me";
 
+// За обратным прокси (Railway) — чтобы req.protocol учитывал X-Forwarded-Proto
+// и ссылки на картинки строились как https, а не http.
+app.set("trust proxy", true);
+
 app.use(express.json());
 
 /* ---------------- FILES ---------------- */

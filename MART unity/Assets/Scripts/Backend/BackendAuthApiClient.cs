@@ -233,7 +233,9 @@ public class BackendAuthApiClient
             request.SetRequestHeader("Content-Type", "application/json");
         }
 
-        request.timeout = 10;
+        // Удалённый сервер (Railway) после простоя «просыпается» дольше, чем localhost,
+        // плюс сетевая задержка и HTTPS — 10 сек не хватало, запросы падали по таймауту.
+        request.timeout = 30;
 
         yield return request.SendWebRequest();
 
