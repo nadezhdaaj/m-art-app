@@ -30,7 +30,14 @@ public static class ARPhotoLibrary
         try
         {
             byte[] bytes = photo.EncodeToPNG();
+            if (bytes == null || bytes.Length == 0)
+            {
+                Debug.LogWarning("AR Photo: EncodeToPNG вернул пустые данные (текстура нечитаемая?).");
+                return null;
+            }
+
             File.WriteAllBytes(fullPath, bytes);
+            Debug.Log("AR Photo: фото сохранено в " + fullPath);
         }
         catch (Exception exception)
         {

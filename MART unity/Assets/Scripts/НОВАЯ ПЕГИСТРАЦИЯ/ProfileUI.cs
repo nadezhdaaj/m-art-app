@@ -83,8 +83,11 @@ public class ProfileUI : MonoBehaviour
 
         if (bioInput != null)
         {
-            bioInput.interactable = false;
+            // Поле остаётся доступным для нажатия в любом режиме, чтобы по тапу
+            // можно было сразу начать ввод; сам тап включает режим редактирования.
+            bioInput.interactable = true;
             bioInput.onValueChanged.AddListener(_ => UpdateSaveButtonState());
+            bioInput.onSelect.AddListener(_ => BeginEditingFromBio());
         }
 
         if (saveButton != null)
@@ -177,16 +180,11 @@ public class ProfileUI : MonoBehaviour
             avatarOptionsPanel.SetActive(false);
         }
 
-        if (bioInput != null)
-        {
-            bioInput.interactable = false;
-        }
-
         UpdateProfileUI();
         UpdateRemoveAvatarButtonState();
     }
 
-    private void ShowEditMode()
+    private void ShowEditMode(bool focusUsername = true)
     {
         if (isSaving)
             return;
@@ -218,7 +216,13 @@ public class ProfileUI : MonoBehaviour
 
         UpdateSaveButtonState();
         ClearWarningText();
-        usernameInput.ActivateInputField();
+
+        // При входе через тап по полю «о себе» не перехватываем фокус на имя —
+        // иначе клавиатура откроется для username вместо bio.
+        if (focusUsername)
+        {
+            usernameInput.ActivateInputField();
+        }
 
         if (changeAvatarButton != null)
         {
@@ -246,6 +250,18 @@ public class ProfileUI : MonoBehaviour
     public void OnEditProfileClicked()
     {
         ShowEditMode();
+    }
+
+    // Тап по полю "о себе" в режиме просмотра сразу включает редактирование,
+    // сохраняя фокус на самом поле, чтобы можно было печатать без лишних нажатий.
+    private void BeginEditingFromBio()
+    {
+        if (isSaving || isEditing)
+        {
+            return;
+        }
+
+        ShowEditMode(false);
     }
 
     public void OnCancelChangesClicked()

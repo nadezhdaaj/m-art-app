@@ -22,23 +22,30 @@ public class ARPhotoPreview : MonoBehaviour
 
     public Texture2D CurrentPhoto => lastPhotoTexture;
 
-    public void ShowPhoto(Texture2D photo, Camera arCamera)
+    public bool ShowPhoto(Texture2D photo, Camera arCamera)
     {
         if (photo == null || arCamera == null)
         {
-            return;
+            return false;
         }
 
-        if (lastPhotoTexture != null)
+        if (lastPhotoTexture != null && lastPhotoTexture != photo)
         {
             Destroy(lastPhotoTexture);
-            lastPhotoTexture = null;
         }
 
         lastPhotoTexture = photo;
         EnsurePreviewPlane(arCamera);
+
+        if (previewRoot == null || previewMaterial == null)
+        {
+            Debug.LogWarning("AR Photo: не удалось создать плоскость превью (шейдер недоступен?).");
+            return false;
+        }
+
         ApplyTextureToPlane(lastPhotoTexture);
         previewRoot.SetActive(true);
+        return true;
     }
 
     public void HidePhoto()
@@ -86,10 +93,14 @@ public class ARPhotoPreview : MonoBehaviour
         }
 
         MeshRenderer renderer = previewRoot.GetComponent<MeshRenderer>();
-        Shader shader = Shader.Find("Universal Render Pipeline/Unlit");
+        Shader shader = ResolvePreviewShader();
         if (shader == null)
         {
-            shader = Shader.Find("Unlit/Texture");
+            // Без шейдера материал создавать нельзя (new Material(null) роняет показ).
+            Debug.LogWarning("AR Photo: не найден ни один шейдер для превью.");
+            Destroy(previewRoot);
+            previewRoot = null;
+            return;
         }
 
         previewMaterial = new Material(shader);
@@ -98,6 +109,30 @@ public class ARPhotoPreview : MonoBehaviour
         renderer.receiveShadows = false;
 
         AttachToCamera(arCamera);
+    }
+
+    private static Shader ResolvePreviewShader()
+    {
+        // Перебираем кандидатов в порядке надёжности. В сборке часть шейдеров может
+        // быть вырезана, поэтому подстраховываемся встроенными вариантами.
+        string[] candidates =
+        {
+            "Universal Render Pipeline/Unlit",
+            "Unlit/Texture",
+            "Sprites/Default",
+            "UI/Default"
+        };
+
+        for (int i = 0; i < candidates.Length; i++)
+        {
+            Shader shader = Shader.Find(candidates[i]);
+            if (shader != null)
+            {
+                return shader;
+            }
+        }
+
+        return null;
     }
 
     private void AttachToCamera(Camera arCamera)

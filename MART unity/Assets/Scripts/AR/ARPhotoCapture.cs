@@ -42,25 +42,87 @@ public class ARPhotoCapture : MonoBehaviour
     {
         captureInProgress = true;
 
-        Camera arCamera = ARPhotoExhibitPlacer.FindArCamera();
-        if (arCamera == null)
+        // Всё тело обёрнуто в try/finally: что бы ни случилось внутри (исключение в
+        // ShowPhoto, недоступный шейдер и т.п.), FinishCapture обязан выполниться,
+        // иначе captureInProgress навсегда останется true, кнопка съёмки залипнет
+        // неактивной и переход к превью не произойдёт.
+        try
         {
-            ToastNotification.Show("Камера AR недоступна");
+            Camera arCamera = ARPhotoExhibitPlacer.FindArCamera();
+            if (arCamera == null)
+            {
+                ToastNotification.Show("Камера AR недоступна");
+                yield break;
+            }
+
+            bool previewWasVisible = photoPreview != null && photoPreview.IsVisible;
+            if (photoPreview != null)
+            {
+                photoPreview.HidePhoto();
+            }
+
+            HideOverlayUi();
+
+            yield return null;
+            yield return new WaitForEndOfFrame();
+
+            Texture2D screenshot = CaptureScreen(arCamera);
+
+            RestoreOverlayUi();
+
+            if (screenshot == null)
+            {
+                if (previewWasVisible && photoPreview != null)
+                {
+                    photoPreview.RestoreVisible();
+                }
+
+                Debug.LogWarning("AR Photo: не удалось получить кадр ни одним из способов захвата.");
+                ToastNotification.Show("Не удалось сделать снимок");
+                yield break;
+            }
+
+            if (photoPreview == null)
+            {
+                photoPreview = GetComponent<ARPhotoPreview>();
+                if (photoPreview == null)
+                {
+                    photoPreview = gameObject.AddComponent<ARPhotoPreview>();
+                }
+            }
+
+            bool shown = false;
+            try
+            {
+                shown = photoPreview.ShowPhoto(screenshot, arCamera);
+            }
+            catch (Exception exception)
+            {
+                Debug.LogException(exception);
+            }
+
+            if (!shown)
+            {
+                DestroyTexture(ref screenshot);
+                ToastNotification.Show("Не удалось показать снимок");
+            }
+        }
+        finally
+        {
+            // На случай, если исключение прервало кадр между Hide и Restore.
+            RestoreOverlayUi();
             FinishCapture();
-            yield break;
         }
+    }
 
-        bool previewWasVisible = photoPreview != null && photoPreview.IsVisible;
-        if (photoPreview != null)
-        {
-            photoPreview.HidePhoto();
-        }
-
-        HideOverlayUi();
-
-        yield return null;
-        yield return new WaitForEndOfFrame();
-
+    /// <summary>
+    /// Делает снимок экрана устойчиво на разных устройствах. На Android (URP + AR Foundation)
+    /// штатный ScreenCapture.CaptureScreenshotAsTexture нередко возвращает null/пустую текстуру,
+    /// поэтому при неудаче пробуем чтение бэкбуфера, а затем рендер AR-камеры в RenderTexture.
+    /// Вызывать строго после WaitForEndOfFrame.
+    /// </summary>
+    private Texture2D CaptureScreen(Camera arCamera)
+    {
         Texture2D screenshot = null;
         try
         {
@@ -71,31 +133,94 @@ public class ARPhotoCapture : MonoBehaviour
             Debug.LogException(exception);
         }
 
-        RestoreOverlayUi();
-
-        if (screenshot == null)
+        if (IsUsableTexture(screenshot))
         {
-            if (previewWasVisible && photoPreview != null)
-            {
-                photoPreview.RestoreVisible();
-            }
-
-            ToastNotification.Show("Не удалось сделать снимок");
-            FinishCapture();
-            yield break;
+            return screenshot;
         }
 
-        if (photoPreview == null)
+        DestroyTexture(ref screenshot);
+        Debug.LogWarning("AR Photo: ScreenCapture не дал кадр, пробуем чтение бэкбуфера.");
+
+        try
         {
-            photoPreview = GetComponent<ARPhotoPreview>();
-            if (photoPreview == null)
+            int width = Screen.width;
+            int height = Screen.height;
+            if (width > 0 && height > 0)
             {
-                photoPreview = gameObject.AddComponent<ARPhotoPreview>();
+                screenshot = new Texture2D(width, height, TextureFormat.RGBA32, false);
+                screenshot.ReadPixels(new Rect(0f, 0f, width, height), 0, 0, false);
+                screenshot.Apply();
             }
         }
+        catch (Exception exception)
+        {
+            Debug.LogException(exception);
+            DestroyTexture(ref screenshot);
+        }
 
-        photoPreview.ShowPhoto(screenshot, arCamera);
-        FinishCapture();
+        if (IsUsableTexture(screenshot))
+        {
+            return screenshot;
+        }
+
+        DestroyTexture(ref screenshot);
+        Debug.LogWarning("AR Photo: чтение бэкбуфера не помогло, рендерим AR-камеру в RenderTexture.");
+
+        return CaptureViaCamera(arCamera);
+    }
+
+    private Texture2D CaptureViaCamera(Camera arCamera)
+    {
+        if (arCamera == null)
+        {
+            return null;
+        }
+
+        int width = Mathf.Max(1, Screen.width);
+        int height = Mathf.Max(1, Screen.height);
+
+        RenderTexture renderTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.ARGB32);
+        RenderTexture previousTarget = arCamera.targetTexture;
+        RenderTexture previousActive = RenderTexture.active;
+
+        Texture2D result = null;
+        try
+        {
+            arCamera.targetTexture = renderTexture;
+            arCamera.Render();
+
+            RenderTexture.active = renderTexture;
+            result = new Texture2D(width, height, TextureFormat.RGBA32, false);
+            result.ReadPixels(new Rect(0f, 0f, width, height), 0, 0, false);
+            result.Apply();
+        }
+        catch (Exception exception)
+        {
+            Debug.LogException(exception);
+            DestroyTexture(ref result);
+        }
+        finally
+        {
+            arCamera.targetTexture = previousTarget;
+            RenderTexture.active = previousActive;
+            RenderTexture.ReleaseTemporary(renderTexture);
+        }
+
+        return IsUsableTexture(result) ? result : null;
+    }
+
+    private static bool IsUsableTexture(Texture2D texture)
+    {
+        return texture != null && texture.width > 1 && texture.height > 1;
+    }
+
+    private void DestroyTexture(ref Texture2D texture)
+    {
+        if (texture != null)
+        {
+            Destroy(texture);
+            texture = null;
+        }
     }
 
     private void HideOverlayUi()
