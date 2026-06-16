@@ -23,7 +23,7 @@ public class BackendManager : MonoBehaviour
     public const bool BypassAuthForTesting = true;
 
     [Header("Backend")]
-    [SerializeField] private string backendBaseUrl = "http://localhost:3001";
+    [SerializeField] private string backendBaseUrl = "https://spirited-alignment-production-1966.up.railway.app";
 
     public string ApiBaseUrl => (backendBaseUrl ?? string.Empty).TrimEnd('/');
 
@@ -430,7 +430,11 @@ public class BackendManager : MonoBehaviour
     {
         if (BypassAuthForTesting)
         {
-            // Синглтоны уже созданы в AuthScene (Awake). Уходим в игру без экрана входа.
+            // Синглтоны уже созданы в AuthScene (Awake). Восстанавливаем сессию (если есть
+            // сохранённый токен) ДО перехода в игру, чтобы профиль был заполнен к моменту
+            // загрузки главной сцены и не показывался пустым.
+            yield return StartCoroutine(TryRestoreSessionData());
+
             if (SceneManager.GetActiveScene().name == LoginSceneName)
             {
                 SceneManager.LoadScene(MainSceneName);
@@ -487,6 +491,32 @@ public class BackendManager : MonoBehaviour
         }
 
         LobbyManager.instance?.LoadProfile();
+    }
+
+    /// <summary>
+    /// Восстанавливает CurrentUser/CurrentProfile из сохранённого токена.
+    /// Ничего не делает, если токена нет. Безопасен для bypass-режима.
+    /// </summary>
+    private IEnumerator TryRestoreSessionData()
+    {
+        string token = CurrentToken;
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            yield break;
+        }
+
+        ApiResult<SessionResponseDto> sessionResult = null;
+        yield return StartCoroutine(apiClient.GetSession(token, response => sessionResult = response));
+
+        if (sessionResult == null || !sessionResult.Success || sessionResult.Data?.user == null)
+        {
+            // Токен протух — чистим сохранённую сессию, профиль останется пустым.
+            ClearSession();
+            yield break;
+        }
+
+        CurrentUser = sessionResult.Data.user;
+        yield return StartCoroutine(RefreshProfile());
     }
 
     private IEnumerator LoginLogic(string email, string password)
@@ -1223,7 +1253,13 @@ public class BackendManager : MonoBehaviour
     {
         ExhibitFavoritesRuntimeSetup.ConfigureScene(scene.name);
 
-        if (scene.name != "The main stage" || CurrentUser == null)
+        if (scene.name != "The main stage")
+        {
+            return;
+        }
+
+        // Не уходим в профиль, если пользователь не авторизован и нет токена для восстановления.
+        if (CurrentUser == null && string.IsNullOrWhiteSpace(CurrentToken))
         {
             return;
         }
@@ -1234,6 +1270,15 @@ public class BackendManager : MonoBehaviour
     private IEnumerator ShowProfileAfterSceneLoad()
     {
         yield return null;
+
+        // Сессия восстанавливается асинхронно: дожидаемся CurrentUser, чтобы профиль
+        // не показался пустым, если сцена загрузилась раньше ответа сервера.
+        float timeout = 10f;
+        while (CurrentUser == null && timeout > 0f)
+        {
+            timeout -= Time.unscaledDeltaTime;
+            yield return null;
+        }
 
         if (CurrentUser == null)
         {

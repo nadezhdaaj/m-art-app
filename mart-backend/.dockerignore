@@ -1,0 +1,7 @@
+node_modules
+.env
+uploads
+generated
+.git
+Dockerfile
+docker-compose.yml

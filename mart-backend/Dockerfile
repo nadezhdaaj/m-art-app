@@ -14,5 +14,5 @@ COPY . .
 # генерируем prisma client
 RUN npx prisma generate
 
-# запускаем сервер
-CMD ["node", "index.js"]
+# накатываем миграции и запускаем сервер
+CMD npx prisma migrate deploy && node index.js

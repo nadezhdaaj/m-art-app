@@ -2,7 +2,7 @@ using UnityEngine;
 
 public static class BackendUrlProvider
 {
-    private const string DefaultUrl = "http://localhost:3001";
+    private const string DefaultUrl = "https://spirited-alignment-production-1966.up.railway.app";
     private const string PlayerPrefsKey = "mart.backend.url";
 
     /// <summary>
@@ -10,28 +10,27 @@ public static class BackendUrlProvider
     /// Example: http://192.168.1.5:3001 — set once before Build.
     /// Leave empty when using USB + adb reverse.
     /// </summary>
-    public const string DeviceLanUrl = "http://192.168.0.11:3001";
+    public const string DeviceLanUrl = "";
 
     public static string GetBaseUrl(string serializedUrl = null)
     {
-        string candidate = string.IsNullOrWhiteSpace(serializedUrl) ? DefaultUrl : serializedUrl.Trim();
-
+        // PlayerPrefs override wins (удобно для отладки против локального бэка).
         string overrideUrl = PlayerPrefs.GetString(PlayerPrefsKey, string.Empty);
         if (!string.IsNullOrWhiteSpace(overrideUrl))
         {
             return overrideUrl.Trim().TrimEnd('/');
         }
 
-#if UNITY_EDITOR
-        return candidate.TrimEnd('/');
-#else
-        if (IsLocalhost(candidate) && !string.IsNullOrWhiteSpace(DeviceLanUrl))
+        string candidate = string.IsNullOrWhiteSpace(serializedUrl) ? DefaultUrl : serializedUrl.Trim();
+
+        // Если в сцене/префабе остался старый localhost (или поле пустое) —
+        // используем боевой DefaultUrl, чтобы не зависеть от значения в Инспекторе.
+        if (IsLocalhost(candidate))
         {
-            return DeviceLanUrl.Trim().TrimEnd('/');
+            return DefaultUrl.TrimEnd('/');
         }
 
         return candidate.TrimEnd('/');
-#endif
     }
 
     public static bool IsLocalhost(string url)
