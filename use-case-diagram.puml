@@ -1,0 +1,46 @@
+@startuml Use Case Diagram - m-art-app
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Гость" as Guest
+actor "Зарегистрированный\nпользователь" as User
+
+' Зарегистрированный пользователь наследует все прецеденты Гостя
+' и дополнительно имеет доступ к прецедентам, требующим авторизации
+User --|> Guest
+
+rectangle "m-art-app" {
+  usecase "Регистрация" as UC1
+  usecase "Вход в систему" as UC2
+  usecase "Просмотр профиля" as UC3
+  usecase "Прохождение викторины" as UC4
+  usecase "Общение с гидом «Мартишка»" as UC5
+
+  usecase "Выход из системы" as UC6
+  usecase "Редактирование профиля" as UC7
+  usecase "Просмотр своих работ" as UC8
+  usecase "Создание работы" as UC9
+  usecase "Редактирование работы" as UC10
+  usecase "Управление избранными выставками" as UC11
+  usecase "Просмотр истории посещений выставок" as UC12
+  usecase "Посещение выставки\n(начисление баллов)" as UC13
+}
+
+' Прецеденты, доступные Гостю (и, по наследованию, Пользователю)
+Guest -- UC1
+Guest -- UC2
+Guest -- UC3
+Guest -- UC4
+Guest -- UC5
+
+' Прецеденты, доступные только авторизованному Пользователю
+User -- UC6
+User -- UC7
+User -- UC8
+User -- UC9
+User -- UC10
+User -- UC11
+User -- UC12
+User -- UC13
+
+@enduml

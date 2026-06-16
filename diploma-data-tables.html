@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Входные и выходные данные приложения M-ART — таблицы для дипломной работы</title>
+<style>
+  body { font-family: "Times New Roman", Times, serif; font-size: 14pt; margin: 32px; color: #000; }
+  h1 { font-size: 16pt; text-align: center; }
+  h2 { font-size: 14pt; margin-top: 28px; }
+  .caption { font-size: 14pt; margin-top: 18px; margin-bottom: 4px; text-align: left; }
+  table { border-collapse: collapse; width: 100%; margin-bottom: 14px; }
+  th, td { border: 1px solid #000; padding: 5px 8px; text-align: left; vertical-align: top; font-size: 12pt; }
+  th { background: #f0f0f0; font-weight: bold; }
+  td.field { font-family: Consolas, "Courier New", monospace; white-space: nowrap; font-size: 11pt; }
+  .note { font-size: 11pt; color: #333; margin-top: 2px; margin-bottom: 14px; }
+</style>
+</head>
+<body>
+
+<h1>Входные и выходные данные приложения M-ART</h1>
+
+<h2>1. Входные данные</h2>
+
+<p class="caption">Таблица 1 — Аутентификация и регистрация (входные данные)</p>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Эндпоинт</th><th>Описание</th></tr>
+<tr><td class="field">username</td><td>строка</td><td>POST /auth/register</td><td>Имя пользователя при регистрации</td></tr>
+<tr><td class="field">email</td><td>строка</td><td>POST /auth/register, /auth/login, /auth/sign-up/email, /auth/sign-in/email</td><td>Электронная почта (логин)</td></tr>
+<tr><td class="field">password</td><td>строка</td><td>POST /auth/register, /auth/login, /auth/sign-up/email, /auth/sign-in/email</td><td>Пароль</td></tr>
+<tr><td class="field">bio</td><td>строка</td><td>POST /auth/register</td><td>Краткая биография пользователя</td></tr>
+<tr><td class="field">name</td><td>строка</td><td>POST /auth/sign-up/email</td><td>Имя пользователя при регистрации (альтернативный флоу)</td></tr>
+</table>
+
+<p class="caption">Таблица 2 — Профиль пользователя (входные данные)</p>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Эндпоинт</th><th>Описание</th></tr>
+<tr><td class="field">username</td><td>строка</td><td>PATCH /profile/me</td><td>Новое имя пользователя</td></tr>
+<tr><td class="field">bio</td><td>строка</td><td>PATCH /profile/me</td><td>Новая биография</td></tr>
+<tr><td class="field">avatar</td><td>файл (multipart)</td><td>PATCH /profile/me, PATCH /profile/:id/avatar</td><td>Изображение аватара (сохраняется в /uploads/avatars/)</td></tr>
+<tr><td class="field">points</td><td>число</td><td>POST /profile/:id/add-points</td><td>Количество начисляемых очков</td></tr>
+<tr><td class="field">id</td><td>параметр пути</td><td>GET/PATCH /profile/:id, PATCH /profile/:id/avatar</td><td>Идентификатор пользователя</td></tr>
+</table>
+
+<p class="caption">Таблица 3 — Произведения искусства (входные данные)</p>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Эндпоинт</th><th>Описание</th></tr>
+<tr><td class="field">title</td><td>строка</td><td>POST/PATCH /artworks/me*</td><td>Название произведения</td></tr>
+<tr><td class="field">description</td><td>строка</td><td>POST/PATCH /artworks/me*</td><td>Описание произведения</td></tr>
+<tr><td class="field">kind</td><td>строка (по умолчанию «painting»)</td><td>POST/PATCH /artworks/me*</td><td>Тип произведения</td></tr>
+<tr><td class="field">source</td><td>строка (по умолчанию «paint-canvas»)</td><td>POST/PATCH /artworks/me*</td><td>Источник создания</td></tr>
+<tr><td class="field">status</td><td>строка (по умолчанию «DRAFT»)</td><td>POST/PATCH /artworks/me*</td><td>Статус произведения</td></tr>
+<tr><td class="field">schemaVersion</td><td>число (по умолчанию 1)</td><td>POST/PATCH /artworks/me*</td><td>Версия схемы данных произведения</td></tr>
+<tr><td class="field">image</td><td>файл (multipart)</td><td>POST/PATCH /artworks/me*</td><td>Изображение произведения</td></tr>
+<tr><td class="field">thumbnail</td><td>файл (multipart)</td><td>POST/PATCH /artworks/me*</td><td>Миниатюра изображения</td></tr>
+<tr><td class="field">id</td><td>параметр пути</td><td>GET/PATCH /artworks/me/:id</td><td>Идентификатор произведения</td></tr>
+</table>
+<p class="note">* /artworks/me (создание, POST) и /artworks/me/:id (обновление, PATCH)</p>
+
+<p class="caption">Таблица 4 — Избранное и просмотры экспонатов (входные данные)</p>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Эндпоинт</th><th>Описание</th></tr>
+<tr><td class="field">exhibitId</td><td>параметр пути</td><td>POST/DELETE /favorites/exhibits/:exhibitId</td><td>Идентификатор экспоната для добавления/удаления из избранного</td></tr>
+<tr><td class="field">exhibitId</td><td>параметр пути</td><td>POST /progress/exhibits/:exhibitId/view</td><td>Идентификатор просмотренного экспоната</td></tr>
+</table>
+
+<p class="caption">Таблица 5 — Гид (входные данные)</p>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Эндпоинт</th><th>Описание</th></tr>
+<tr><td class="field">topicId</td><td>строка</td><td>POST /guide/chat</td><td>Идентификатор темы беседы</td></tr>
+<tr><td class="field">message</td><td>строка</td><td>POST /guide/chat</td><td>Текст сообщения пользователя</td></tr>
+</table>
+
+<p class="caption">Таблица 6 — Викторина (входные данные)</p>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Эндпоинт</th><th>Описание</th></tr>
+<tr><td class="field">question</td><td>строка</td><td>POST /quiz/add</td><td>Текст вопроса</td></tr>
+<tr><td class="field">fact</td><td>строка</td><td>POST /quiz/add</td><td>Сопутствующий факт к вопросу</td></tr>
+<tr><td class="field">correctIndex</td><td>число</td><td>POST /quiz/add</td><td>Индекс правильного варианта ответа</td></tr>
+<tr><td class="field">answers</td><td>массив строк</td><td>POST /quiz/add</td><td>Варианты ответов</td></tr>
+</table>
+
+<p class="caption">Таблица 7 — Сквозные входные данные</p>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Где используется</th><th>Описание</th></tr>
+<tr><td class="field">Authorization (JWT)</td><td>заголовок запроса</td><td>Все защищённые эндпоинты (authMiddleware)</td><td>Токен авторизации пользователя</td></tr>
+<tr><td class="field">id / :id</td><td>параметр пути</td><td>Множество эндпоинтов</td><td>Идентификаторы сущностей (пользователь, произведение и т.д.) в URL</td></tr>
+</table>
+
+
+<h2>2. Выходные данные</h2>
+
+<p class="caption">Таблица 8 — Аутентификация и сессия (выходные данные)</p>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Эндпоинт</th><th>Описание</th></tr>
+<tr><td class="field">token</td><td>строка (JWT)</td><td>POST /auth/register, /auth/login, /auth/sign-up/email, /auth/sign-in/email</td><td>Токен авторизации, выдаваемый после входа/регистрации</td></tr>
+<tr><td class="field">id, username, email, avatarUrl, bio</td><td>строки</td><td>*/auth/*, GET /auth/get-session</td><td>Данные профиля пользователя в составе ответа</td></tr>
+<tr><td class="field">points, title</td><td>число, строка</td><td>*/auth/*, профиль</td><td>Текущие очки и звание пользователя («Новичок», «Мастер галереи» и т.д.)</td></tr>
+<tr><td class="field">createdAt, updatedAt</td><td>дата/время</td><td>*/auth/*</td><td>Метки создания и обновления учётной записи</td></tr>
+<tr><td class="field">message</td><td>строка</td><td>любой эндпоинт при ошибке</td><td>Текстовое сообщение об ошибке (например, «User not found», «Invalid password»)</td></tr>
+</table>
+
+<p class="caption">Таблица 9 — Профиль пользователя (выходные данные)</p>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Эндпоинт</th><th>Описание</th></tr>
+<tr><td class="field">id, userId</td><td>строка (UUID)</td><td>GET/PATCH /profile/me, /profile/:id</td><td>Идентификатор пользователя</td></tr>
+<tr><td class="field">displayName</td><td>строка</td><td>GET/PATCH /profile/me</td><td>Отображаемое имя (username или email)</td></tr>
+<tr><td class="field">bio, avatarUrl</td><td>строки</td><td>GET/PATCH /profile/*</td><td>Биография и ссылка на изображение аватара</td></tr>
+<tr><td class="field">progress.xp</td><td>строка (число)</td><td>GET/PATCH /profile/me</td><td>Текущий опыт пользователя в виде вложенного объекта progress</td></tr>
+<tr><td class="field">points, title</td><td>число, строка</td><td>GET /profile/:id, POST /profile/:id/add-points</td><td>Накопленные очки и присвоенное звание</td></tr>
+</table>
+
+<p class="caption">Таблица 10 — Произведения искусства (выходные данные)</p>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Эндпоинт</th><th>Описание</th></tr>
+<tr><td class="field">id</td><td>строка (UUID)</td><td>GET/POST/PATCH /artworks/me*</td><td>Идентификатор произведения</td></tr>
+<tr><td class="field">title, description</td><td>строки</td><td>GET/POST/PATCH /artworks/me*</td><td>Название и описание произведения</td></tr>
+<tr><td class="field">kind, source, status</td><td>строки</td><td>GET/POST/PATCH /artworks/me*</td><td>Тип, источник создания и статус (DRAFT и т.д.)</td></tr>
+<tr><td class="field">schemaVersion</td><td>число</td><td>GET/POST/PATCH /artworks/me*</td><td>Версия схемы данных</td></tr>
+<tr><td class="field">imageUrl, thumbnailUrl</td><td>строка (URL)</td><td>GET/POST/PATCH /artworks/me*</td><td>Полные ссылки на изображение и миниатюру (формируются на основе publicBase)</td></tr>
+<tr><td class="field">publishedAt, createdAt, updatedAt</td><td>дата/время</td><td>GET/POST/PATCH /artworks/me*</td><td>Метки публикации, создания и обновления</td></tr>
+<tr><td class="field">список произведений</td><td>массив объектов Artwork</td><td>GET /artworks/me</td><td>Список всех работ текущего пользователя</td></tr>
+</table>
+
+<p class="caption">Таблица 11 — Избранное и просмотры экспонатов (выходные данные)</p>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Эндпоинт</th><th>Описание</th></tr>
+<tr><td class="field">список exhibitId</td><td>массив строк</td><td>GET /favorites/exhibits, GET /progress/exhibits/views</td><td>Идентификаторы избранных / просмотренных экспонатов</td></tr>
+<tr><td class="field">exhibitId, createdAt</td><td>строка, дата</td><td>POST /favorites/exhibits/:exhibitId</td><td>Подтверждение добавления экспоната в избранное с датой</td></tr>
+<tr><td class="field">ok</td><td>булево</td><td>DELETE /favorites/exhibits/:exhibitId</td><td>Подтверждение удаления из избранного</td></tr>
+<tr><td class="field">applied</td><td>булево</td><td>POST /progress/exhibits/:exhibitId/view</td><td>Признак того, был ли просмотр зафиксирован впервые</td></tr>
+<tr><td class="field">awardedXp, previousXp, totalXp</td><td>числа</td><td>POST /progress/exhibits/:exhibitId/view</td><td>Начисленный опыт, опыт до и после начисления (геймификация)</td></tr>
+</table>
+
+<p class="caption">Таблица 12 — Гид (выходные данные)</p>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Эндпоинт</th><th>Описание</th></tr>
+<tr><td class="field">welcome, suggestions</td><td>строка, массив</td><td>GET /guide/suggestions</td><td>Приветственный текст и подсказки-чипы для начала диалога</td></tr>
+<tr><td class="field">reply</td><td>строка</td><td>POST /guide/chat</td><td>Ответ гида (Мартишки) на сообщение или выбранную тему</td></tr>
+<tr><td class="field">topicId</td><td>строка или null</td><td>POST /guide/chat</td><td>Идентификатор распознанной темы беседы</td></tr>
+<tr><td class="field">source</td><td>строка (chip, keyword, off_topic, no_match)</td><td>POST /guide/chat</td><td>Источник/способ формирования ответа</td></tr>
+</table>
+
+<p class="caption">Таблица 13 — Викторина (выходные данные)</p>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Эндпоинт</th><th>Описание</th></tr>
+<tr><td class="field">список вопросов</td><td>массив объектов QuizQuestion</td><td>GET /quiz/questions</td><td>Вопросы викторины вместе с вариантами ответов (answers)</td></tr>
+<tr><td class="field">question, fact, correctIndex</td><td>строки, число</td><td>GET /quiz/questions, POST /quiz/add</td><td>Текст вопроса, пояснительный факт и индекс правильного ответа</td></tr>
+<tr><td class="field">answers</td><td>массив объектов QuizAnswer</td><td>GET /quiz/questions, POST /quiz/add</td><td>Варианты ответов на вопрос</td></tr>
+</table>
+
+<p class="caption">Таблица 14 — Файлы и медиа (выходные данные)</p>
+<table>
+<tr><th>Данные</th><th>Тип</th><th>Где формируется</th><th>Описание</th></tr>
+<tr><td class="field">файл аватара</td><td>изображение (статика)</td><td>/uploads/avatars/...</td><td>Загруженное и сохранённое изображение профиля, отдаётся по прямой ссылке</td></tr>
+<tr><td class="field">файл произведения / миниатюра</td><td>изображение (статика)</td><td>/uploads/artworks/... (через imageUrl/thumbnailUrl)</td><td>Сохранённое изображение работы и его уменьшенная копия</td></tr>
+</table>
+
+<p class="caption">Таблица 15 — Выходные данные на стороне клиентского приложения (Unity)</p>
+<table>
+<tr><th>Что выводится</th><th>Описание</th></tr>
+<tr><td class="field">Экраны интерфейса</td><td>Визуальное отображение данных, полученных от backend API (профиль, галерея, редактор, выставки, викторина, чат с гидом)</td></tr>
+<tr><td class="field">Холст / нарисованное изображение</td><td>Результат работы пользователя в графическом редакторе (paint-canvas), который затем отправляется на сервер как image/thumbnail</td></tr>
+<tr><td class="field">Уведомления и всплывающие сообщения</td><td>Обратная связь по действиям пользователя (успех операции, ошибки, начисление очков/опыта)</td></tr>
+<tr><td class="field">Звуковые и анимационные эффекты</td><td>Реакция интерфейса на действия пользователя (геймификация, прогресс, достижения)</td></tr>
+</table>
+
+</body>
+</html>

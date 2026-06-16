@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Выходные данные приложения M-ART</title>
+<style>
+  body { font-family: "Segoe UI", Arial, sans-serif; margin: 32px; color: #222; }
+  h1 { font-size: 22px; }
+  h2 { font-size: 18px; margin-top: 36px; border-bottom: 2px solid #444; padding-bottom: 4px; }
+  table { border-collapse: collapse; width: 100%; margin-top: 10px; margin-bottom: 8px; }
+  th, td { border: 1px solid #999; padding: 6px 10px; text-align: left; vertical-align: top; font-size: 14px; }
+  th { background: #e6e6e6; }
+  td.field { font-family: Consolas, monospace; white-space: nowrap; }
+  .note { font-size: 13px; color: #555; margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<h1>Выходные данные приложения M-ART</h1>
+<p>Обзор данных, которые система возвращает клиенту (Unity-приложению) через REST API бэкенда (<code>mart-backend/index.js</code>), а также то, что в итоге видит пользователь на экране.</p>
+
+<h2>Таблица 1 — Аутентификация и сессия</h2>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Эндпоинт</th><th>Описание</th></tr>
+<tr><td class="field">token</td><td>строка (JWT)</td><td><code>POST /auth/register</code>, <code>/auth/login</code>, <code>/auth/sign-up/email</code>, <code>/auth/sign-in/email</code></td><td>Токен авторизации, выдаваемый после входа/регистрации</td></tr>
+<tr><td class="field">id, username, email, avatarUrl, bio</td><td>строки</td><td><code>*/auth/*</code>, <code>GET /auth/get-session</code></td><td>Данные профиля пользователя в составе ответа</td></tr>
+<tr><td class="field">points, title</td><td>число, строка</td><td><code>*/auth/*</code>, профиль</td><td>Текущие очки и звание пользователя («Новичок», «Мастер галереи» и т.д.)</td></tr>
+<tr><td class="field">createdAt, updatedAt</td><td>дата/время</td><td><code>*/auth/*</code></td><td>Метки создания и обновления учётной записи</td></tr>
+<tr><td class="field">message</td><td>строка</td><td>Любой эндпоинт при ошибке</td><td>Текстовое сообщение об ошибке (напр. «User not found», «Invalid password»)</td></tr>
+</table>
+
+<h2>Таблица 2 — Профиль пользователя</h2>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Эндпоинт</th><th>Описание</th></tr>
+<tr><td class="field">id, userId</td><td>строка (UUID)</td><td><code>GET/PATCH /profile/me</code>, <code>/profile/:id</code></td><td>Идентификатор пользователя</td></tr>
+<tr><td class="field">displayName</td><td>строка</td><td><code>GET/PATCH /profile/me</code></td><td>Отображаемое имя (username или email)</td></tr>
+<tr><td class="field">bio, avatarUrl</td><td>строки</td><td><code>GET/PATCH /profile/*</code></td><td>Биография и ссылка на изображение аватара</td></tr>
+<tr><td class="field">progress.xp</td><td>строка (число)</td><td><code>GET/PATCH /profile/me</code></td><td>Текущий опыт пользователя в виде вложенного объекта <code>progress</code></td></tr>
+<tr><td class="field">points, title</td><td>число, строка</td><td><code>GET /profile/:id</code>, <code>POST /profile/:id/add-points</code></td><td>Накопленные очки и присвоенное звание</td></tr>
+</table>
+
+<h2>Таблица 3 — Произведения искусства (Artwork)</h2>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Эндпоинт</th><th>Описание</th></tr>
+<tr><td class="field">id</td><td>строка (UUID)</td><td><code>GET/POST/PATCH /artworks/me*</code></td><td>Идентификатор произведения</td></tr>
+<tr><td class="field">title, description</td><td>строки</td><td><code>GET/POST/PATCH /artworks/me*</code></td><td>Название и описание произведения</td></tr>
+<tr><td class="field">kind, source, status</td><td>строки</td><td><code>GET/POST/PATCH /artworks/me*</code></td><td>Тип, источник создания и статус (<code>DRAFT</code> и т.д.)</td></tr>
+<tr><td class="field">schemaVersion</td><td>число</td><td><code>GET/POST/PATCH /artworks/me*</code></td><td>Версия схемы данных</td></tr>
+<tr><td class="field">imageUrl, thumbnailUrl</td><td>строка (URL)</td><td><code>GET/POST/PATCH /artworks/me*</code></td><td>Полные ссылки на изображение и миниатюру (формируются на основе <code>publicBase</code>)</td></tr>
+<tr><td class="field">publishedAt, createdAt, updatedAt</td><td>дата/время</td><td><code>GET/POST/PATCH /artworks/me*</code></td><td>Метки публикации, создания и обновления</td></tr>
+<tr><td class="field">список произведений</td><td>массив объектов Artwork</td><td><code>GET /artworks/me</code></td><td>Список всех работ текущего пользователя</td></tr>
+</table>
+
+<h2>Таблица 4 — Избранное и просмотры экспонатов</h2>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Эндпоинт</th><th>Описание</th></tr>
+<tr><td class="field">список exhibitId</td><td>массив строк</td><td><code>GET /favorites/exhibits</code>, <code>GET /progress/exhibits/views</code></td><td>Идентификаторы избранных / просмотренных экспонатов</td></tr>
+<tr><td class="field">exhibitId, createdAt</td><td>строка, дата</td><td><code>POST /favorites/exhibits/:exhibitId</code></td><td>Подтверждение добавления экспоната в избранное с датой</td></tr>
+<tr><td class="field">ok</td><td>булево</td><td><code>DELETE /favorites/exhibits/:exhibitId</code></td><td>Подтверждение удаления из избранного</td></tr>
+<tr><td class="field">applied</td><td>булево</td><td><code>POST /progress/exhibits/:exhibitId/view</code></td><td>Признак того, был ли просмотр зафиксирован впервые</td></tr>
+<tr><td class="field">awardedXp, previousXp, totalXp</td><td>числа</td><td><code>POST /progress/exhibits/:exhibitId/view</code></td><td>Начисленный опыт, опыт до и после начисления (геймификация)</td></tr>
+</table>
+
+<h2>Таблица 5 — Гид (чат-помощник)</h2>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Эндпоинт</th><th>Описание</th></tr>
+<tr><td class="field">welcome, suggestions</td><td>строка, массив</td><td><code>GET /guide/suggestions</code></td><td>Приветственный текст и подсказки-чипы для начала диалога</td></tr>
+<tr><td class="field">reply</td><td>строка</td><td><code>POST /guide/chat</code></td><td>Ответ гида (Мартишки) на сообщение или выбранную тему</td></tr>
+<tr><td class="field">topicId</td><td>строка или null</td><td><code>POST /guide/chat</code></td><td>Идентификатор распознанной темы беседы</td></tr>
+<tr><td class="field">source</td><td>строка (<code>chip</code>, <code>keyword</code>, <code>off_topic</code>, <code>no_match</code>)</td><td><code>POST /guide/chat</code></td><td>Источник/способ формирования ответа</td></tr>
+</table>
+
+<h2>Таблица 6 — Викторина (Quiz)</h2>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Эндпоинт</th><th>Описание</th></tr>
+<tr><td class="field">список вопросов</td><td>массив объектов QuizQuestion</td><td><code>GET /quiz/questions</code></td><td>Вопросы викторины вместе с вариантами ответов (<code>answers</code>)</td></tr>
+<tr><td class="field">question, fact, correctIndex</td><td>строки, число</td><td><code>GET /quiz/questions</code>, <code>POST /quiz/add</code></td><td>Текст вопроса, пояснительный факт и индекс правильного ответа</td></tr>
+<tr><td class="field">answers</td><td>массив объектов QuizAnswer</td><td><code>GET /quiz/questions</code>, <code>POST /quiz/add</code></td><td>Варианты ответов на вопрос</td></tr>
+</table>
+
+<h2>Таблица 7 — Файлы и медиа</h2>
+<table>
+<tr><th>Данные</th><th>Тип</th><th>Где формируется</th><th>Описание</th></tr>
+<tr><td class="field">файл аватара</td><td>изображение (статика)</td><td><code>/uploads/avatars/...</code></td><td>Загруженное и сохранённое изображение профиля, отдаётся по прямой ссылке</td></tr>
+<tr><td class="field">файл произведения / миниатюра</td><td>изображение (статика)</td><td><code>/uploads/artworks/...</code> (через <code>imageUrl</code>/<code>thumbnailUrl</code>)</td><td>Сохранённое изображение работы и его уменьшенная копия</td></tr>
+</table>
+
+<h2>Таблица 8 — Выходные данные на стороне Unity-приложения</h2>
+<table>
+<tr><th>Что выводится</th><th>Описание</th></tr>
+<tr><td class="field">Экраны интерфейса</td><td>Визуальное отображение данных, полученных от backend API (профиль, галерея, редактор, выставки, викторина, чат с гидом)</td></tr>
+<tr><td class="field">Холст / нарисованное изображение</td><td>Результат работы пользователя в графическом редакторе (<code>paint-canvas</code>), который затем отправляется на сервер как <code>image</code>/<code>thumbnail</code></td></tr>
+<tr><td class="field">Уведомления и всплывающие сообщения</td><td>Обратная связь по действиям пользователя (успех операции, ошибки, начисление очков/опыта)</td></tr>
+<tr><td class="field">Звуковые и анимационные эффекты</td><td>Реакция интерфейса на действия пользователя (геймификация, прогресс, достижения)</td></tr>
+</table>
+
+</body>
+</html>

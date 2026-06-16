@@ -1,0 +1,89 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Use Case Diagram - m-art-app" id="usecase-mart-app">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- System boundary -->
+        <mxCell id="boundary" value="m-art-app" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fontStyle=1;fillColor=none;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="260" y="40" width="900" height="700" as="geometry" />
+        </mxCell>
+
+        <!-- Actors -->
+        <mxCell id="actorGuest" value="Гость" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="60" y="280" width="40" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="actorUser" value="Зарегистрированный&#10;пользователь" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="60" y="540" width="40" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Generalization: User inherits from Guest (hollow triangle towards parent) -->
+        <mxCell id="gen1" style="endArrow=block;endFill=0;endSize=16;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="actorUser" target="actorGuest">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Use cases available to Guest -->
+        <mxCell id="uc1" value="Регистрация" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="300" y="100" width="260" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="uc2" value="Вход в систему" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="620" y="100" width="260" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="uc3" value="Просмотр профиля" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="300" y="180" width="260" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="uc4" value="Прохождение викторины" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="620" y="180" width="260" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="uc5" value="Общение с гидом «Мартишка»" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="300" y="260" width="260" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- Use cases available only to authorized User -->
+        <mxCell id="uc6" value="Выход из системы" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="620" y="260" width="260" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="uc7" value="Редактирование профиля" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="300" y="340" width="260" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="uc8" value="Просмотр своих работ" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="620" y="340" width="260" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="uc9" value="Создание работы" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="300" y="420" width="260" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="uc10" value="Редактирование работы" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="620" y="420" width="260" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="uc11" value="Управление избранными&#10;выставками" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="300" y="500" width="260" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="uc12" value="Просмотр истории&#10;посещений выставок" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="620" y="500" width="260" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="uc13" value="Посещение выставки&#10;(начисление баллов)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="300" y="580" width="260" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- Associations: Guest -->
+        <mxCell id="eg1" style="endArrow=none;html=1;" edge="1" parent="1" source="actorGuest" target="uc1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eg2" style="endArrow=none;html=1;" edge="1" parent="1" source="actorGuest" target="uc2"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eg3" style="endArrow=none;html=1;" edge="1" parent="1" source="actorGuest" target="uc3"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eg4" style="endArrow=none;html=1;" edge="1" parent="1" source="actorGuest" target="uc4"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eg5" style="endArrow=none;html=1;" edge="1" parent="1" source="actorGuest" target="uc5"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- Associations: User -->
+        <mxCell id="eu6" style="endArrow=none;html=1;" edge="1" parent="1" source="actorUser" target="uc6"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eu7" style="endArrow=none;html=1;" edge="1" parent="1" source="actorUser" target="uc7"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eu8" style="endArrow=none;html=1;" edge="1" parent="1" source="actorUser" target="uc8"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eu9" style="endArrow=none;html=1;" edge="1" parent="1" source="actorUser" target="uc9"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eu10" style="endArrow=none;html=1;" edge="1" parent="1" source="actorUser" target="uc10"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eu11" style="endArrow=none;html=1;" edge="1" parent="1" source="actorUser" target="uc11"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eu12" style="endArrow=none;html=1;" edge="1" parent="1" source="actorUser" target="uc12"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eu13" style="endArrow=none;html=1;" edge="1" parent="1" source="actorUser" target="uc13"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

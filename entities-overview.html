@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Сущности системы m-art-app (mart-backend)</title>
+<style>
+  body { font-family: "Segoe UI", Arial, sans-serif; margin: 32px; color: #222; }
+  h1 { font-size: 22px; }
+  h2 { font-size: 18px; margin-top: 36px; border-bottom: 2px solid #444; padding-bottom: 4px; }
+  table { border-collapse: collapse; width: 100%; margin-top: 10px; margin-bottom: 8px; }
+  th, td { border: 1px solid #999; padding: 6px 10px; text-align: left; vertical-align: top; font-size: 14px; }
+  th { background: #e6e6e6; }
+  td.field { font-family: Consolas, monospace; white-space: nowrap; }
+  .note { font-size: 13px; color: #555; margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<h1>Сущности системы m-art-app (backend: mart-backend, Prisma)</h1>
+<p>Ниже перечислены сущности (таблицы базы данных) из <code>mart-backend/prisma/schema.prisma</code>, которые реально используются в коде backend (<code>mart-backend/index.js</code>, <code>prisma/seed.js</code>). Каждая сущность снабжена описанием назначения и таблицей полей.</p>
+
+<h2>1. User — Пользователь</h2>
+<p><b>Назначение:</b> учётная запись пользователя приложения. Хранит данные для входа, профиль (имя, аватар, биография), а также игровые показатели — баллы и звание. Используется в маршрутах регистрации/входа (<code>/auth/register</code>, <code>/auth/login</code>, <code>/auth/sign-in/email</code>, <code>/auth/sign-up/email</code>, <code>/auth/get-session</code>) и профиля (<code>/profile/me</code>, <code>/profile/:id</code>, <code>/profile/:id/add-points</code>).</p>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>
+<tr><td class="field">id</td><td>String (UUID)</td><td>Идентификатор пользователя</td></tr>
+<tr><td class="field">email</td><td>String (уник.)</td><td>Email, используется для входа</td></tr>
+<tr><td class="field">passwordHash</td><td>String</td><td>Хэш пароля</td></tr>
+<tr><td class="field">username</td><td>String?</td><td>Имя пользователя (никнейм)</td></tr>
+<tr><td class="field">avatarUrl</td><td>String?</td><td>Ссылка на аватар</td></tr>
+<tr><td class="field">bio</td><td>String?</td><td>Краткая биография / описание профиля</td></tr>
+<tr><td class="field">points</td><td>Int</td><td>Общее количество накопленных баллов</td></tr>
+<tr><td class="field">quiz1Points</td><td>Int</td><td>Баллы, набранные в викторине</td></tr>
+<tr><td class="field">title</td><td>String</td><td>Звание пользователя (например, «Новичок»), присваивается по уровню баллов</td></tr>
+<tr><td class="field">createdAt / updatedAt</td><td>DateTime</td><td>Даты создания и обновления записи</td></tr>
+</table>
+
+<h2>2. Artwork — Творческая работа пользователя</h2>
+<p><b>Назначение:</b> работа (рисунок), созданная пользователем в приложении (например, в графическом редакторе). Хранит изображение, статус и метаданные. Используется в маршрутах <code>/artworks/me</code>, <code>/artworks/me/:id</code> (получение, создание, обновление работ).</p>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>
+<tr><td class="field">id</td><td>String (UUID)</td><td>Идентификатор работы</td></tr>
+<tr><td class="field">userId</td><td>String</td><td>Ссылка на автора работы (User)</td></tr>
+<tr><td class="field">title / description</td><td>String?</td><td>Название и описание работы</td></tr>
+<tr><td class="field">kind</td><td>String</td><td>Тип работы (по умолчанию «painting»)</td></tr>
+<tr><td class="field">source</td><td>String</td><td>Источник создания (по умолчанию «paint-canvas»)</td></tr>
+<tr><td class="field">status</td><td>String</td><td>Статус работы (по умолчанию «DRAFT»)</td></tr>
+<tr><td class="field">schemaVersion</td><td>Int</td><td>Версия формата хранения данных работы</td></tr>
+<tr><td class="field">imageUrl / thumbnailUrl</td><td>String / String?</td><td>Ссылки на изображение и его миниатюру</td></tr>
+<tr><td class="field">createdAt / updatedAt</td><td>DateTime</td><td>Даты создания и обновления работы</td></tr>
+</table>
+
+<h2>3. QuizQuestion — Вопрос викторины</h2>
+<p><b>Назначение:</b> вопрос викторины с пояснительным фактом и индексом правильного ответа. Используется в маршрутах <code>/quiz/questions</code> (получение списка вопросов с вариантами ответов) и <code>/quiz/add</code> (добавление нового вопроса), а также при наполнении базы тестовыми данными (<code>seed.js</code>).</p>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>
+<tr><td class="field">id</td><td>String (UUID)</td><td>Идентификатор вопроса</td></tr>
+<tr><td class="field">question</td><td>String (уник.)</td><td>Текст вопроса</td></tr>
+<tr><td class="field">fact</td><td>String</td><td>Пояснительный факт, показываемый после ответа</td></tr>
+<tr><td class="field">correctIndex</td><td>Int</td><td>Индекс правильного варианта ответа в списке</td></tr>
+<tr><td class="field">createdAt</td><td>DateTime</td><td>Дата создания вопроса</td></tr>
+</table>
+
+<h2>4. QuizAnswer — Вариант ответа</h2>
+<p><b>Назначение:</b> вариант ответа, привязанный к конкретному вопросу викторины. Создаётся вместе с вопросом и возвращается вместе с ним при запросе списка вопросов (включается через связь <code>answers</code> в маршруте <code>/quiz/questions</code> и <code>/quiz/add</code>).</p>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>
+<tr><td class="field">id</td><td>String (UUID)</td><td>Идентификатор варианта ответа</td></tr>
+<tr><td class="field">text</td><td>String</td><td>Текст варианта ответа</td></tr>
+<tr><td class="field">questionId</td><td>String</td><td>Ссылка на вопрос (QuizQuestion)</td></tr>
+</table>
+
+<h2>5. ExhibitFavorite — Избранный экспонат</h2>
+<p><b>Назначение:</b> отметка «избранное» — связывает пользователя с экспонатом (внешним идентификатором), который он добавил в избранное. Используется в маршрутах <code>/favorites/exhibits</code> (список, добавление через upsert, удаление избранного).</p>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>
+<tr><td class="field">id</td><td>String (UUID)</td><td>Идентификатор записи</td></tr>
+<tr><td class="field">userId</td><td>String</td><td>Ссылка на пользователя (User)</td></tr>
+<tr><td class="field">exhibitId</td><td>String</td><td>Идентификатор экспоната (внешний, не связан напрямую таблицей)</td></tr>
+<tr><td class="field">createdAt</td><td>DateTime</td><td>Дата добавления в избранное</td></tr>
+</table>
+<p class="note">Уникальное ограничение <code>[userId, exhibitId]</code> — пользователь не может добавить один и тот же экспонат в избранное дважды.</p>
+
+<h2>6. ExhibitView — Просмотр экспоната</h2>
+<p><b>Назначение:</b> фиксирует факт просмотра пользователем конкретного экспоната — используется для отслеживания прогресса осмотра коллекции. Применяется в маршрутах <code>/progress/exhibits/views</code> (список просмотренных экспонатов) и <code>/progress/exhibits/:exhibitId/view</code> (отметка о просмотре).</p>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>
+<tr><td class="field">id</td><td>String (UUID)</td><td>Идентификатор записи</td></tr>
+<tr><td class="field">userId</td><td>String</td><td>Ссылка на пользователя (User)</td></tr>
+<tr><td class="field">exhibitId</td><td>String</td><td>Идентификатор экспоната (внешний, не связан напрямую таблицей)</td></tr>
+<tr><td class="field">createdAt</td><td>DateTime</td><td>Дата первого просмотра экспоната</td></tr>
+</table>
+<p class="note">Уникальное ограничение <code>[userId, exhibitId]</code> — повторный просмотр того же экспоната не создаёт новую запись.</p>
+
+<h2 style="margin-top:48px;">Краткая сводка по группам маршрутов</h2>
+<table>
+<tr><th>Группа маршрутов</th><th>Назначение</th><th>Использует сущности</th></tr>
+<tr><td>/auth/*</td><td>Регистрация, вход, сессия, выход пользователя</td><td>User</td></tr>
+<tr><td>/profile/*</td><td>Просмотр и редактирование профиля, начисление баллов</td><td>User</td></tr>
+<tr><td>/artworks/*</td><td>Создание, просмотр и редактирование творческих работ</td><td>Artwork, User</td></tr>
+<tr><td>/favorites/exhibits/*</td><td>Управление избранными экспонатами</td><td>ExhibitFavorite, User</td></tr>
+<tr><td>/progress/exhibits/*</td><td>Учёт просмотров экспонатов (прогресс осмотра)</td><td>ExhibitView, User</td></tr>
+<tr><td>/quiz/*</td><td>Получение вопросов викторины и добавление новых вопросов</td><td>QuizQuestion, QuizAnswer</td></tr>
+<tr><td>/guide/*</td><td>Подсказки и чат гида (без обращения к базе данных)</td><td>—</td></tr>
+</table>
+
+<p class="note">Все 6 сущностей из схемы <code>mart-backend/prisma/schema.prisma</code> реально используются в коде — неиспользуемых таблиц не обнаружено.</p>
+
+</body>
+</html>

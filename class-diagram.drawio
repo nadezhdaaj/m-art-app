@@ -1,0 +1,87 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Class Diagram - m-art-app" id="class-diagram-m-art-app">
+    <mxGraphModel dx="1717" dy="937" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="750" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ===================== Классы ===================== -->
+        <mxCell id="cls-artwork" parent="1" vertex="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;"
+          value="&lt;div align=&quot;center&quot;&gt;&lt;b&gt;Artwork&lt;/b&gt;&lt;/div&gt;&lt;hr size=&quot;1&quot;&gt;- id: String&lt;br&gt;- userId: String&lt;br&gt;- title: String&lt;br&gt;- description: String&lt;br&gt;- kind: String&lt;br&gt;- source: String&lt;br&gt;- status: String&lt;br&gt;- imageUrl: String&lt;br&gt;- thumbnailUrl: String&lt;br&gt;- createdAt: DateTime&lt;br&gt;- updatedAt: DateTime&lt;hr size=&quot;1&quot;&gt;+ create(data): Artwork&lt;br&gt;+ update(data): Artwork&lt;br&gt;+ delete(): void">
+          <mxGeometry x="80" y="60" width="300" height="320" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cls-user" parent="1" vertex="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;"
+          value="&lt;div align=&quot;center&quot;&gt;&lt;b&gt;User&lt;/b&gt;&lt;/div&gt;&lt;hr size=&quot;1&quot;&gt;- id: String&lt;br&gt;- email: String&lt;br&gt;- passwordHash: String&lt;br&gt;- username: String&lt;br&gt;- avatarUrl: String&lt;br&gt;- bio: String&lt;br&gt;- points: Int&lt;br&gt;- quiz1Points: Int&lt;br&gt;- title: String&lt;br&gt;- createdAt: DateTime&lt;br&gt;- updatedAt: DateTime&lt;hr size=&quot;1&quot;&gt;+ register(email, password): User&lt;br&gt;+ login(email, password): String&lt;br&gt;+ updateProfile(data): User&lt;br&gt;+ addPoints(amount): void&lt;br&gt;+ changeTitle(): void">
+          <mxGeometry x="460" y="60" width="300" height="380" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cls-exhibitview" parent="1" vertex="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;"
+          value="&lt;div align=&quot;center&quot;&gt;&lt;b&gt;ExhibitView&lt;/b&gt;&lt;/div&gt;&lt;hr size=&quot;1&quot;&gt;- id: String&lt;br&gt;- userId: String&lt;br&gt;- exhibitId: String&lt;br&gt;- createdAt: DateTime&lt;hr size=&quot;1&quot;&gt;+ record(userId, exhibitId): void">
+          <mxGeometry x="860" y="60" width="280" height="170" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cls-exhibitfavorite" parent="1" vertex="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;"
+          value="&lt;div align=&quot;center&quot;&gt;&lt;b&gt;ExhibitFavorite&lt;/b&gt;&lt;/div&gt;&lt;hr size=&quot;1&quot;&gt;- id: String&lt;br&gt;- userId: String&lt;br&gt;- exhibitId: String&lt;br&gt;- createdAt: DateTime&lt;hr size=&quot;1&quot;&gt;+ add(userId, exhibitId): void&lt;br&gt;+ remove(userId, exhibitId): void">
+          <mxGeometry x="860" y="280" width="280" height="190" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cls-quizquestion" parent="1" vertex="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;"
+          value="&lt;div align=&quot;center&quot;&gt;&lt;b&gt;QuizQuestion&lt;/b&gt;&lt;/div&gt;&lt;hr size=&quot;1&quot;&gt;- id: String&lt;br&gt;- question: String&lt;br&gt;- fact: String&lt;br&gt;- correctIndex: Int&lt;br&gt;- createdAt: DateTime&lt;hr size=&quot;1&quot;&gt;+ checkAnswer(index): boolean">
+          <mxGeometry x="80" y="440" width="280" height="190" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cls-quizanswer" parent="1" vertex="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;"
+          value="&lt;div align=&quot;center&quot;&gt;&lt;b&gt;QuizAnswer&lt;/b&gt;&lt;/div&gt;&lt;hr size=&quot;1&quot;&gt;- id: String&lt;br&gt;- text: String&lt;br&gt;- questionId: String">
+          <mxGeometry x="460" y="490" width="260" height="120" as="geometry" />
+        </mxCell>
+
+        <!-- ===================== Ассоциации ===================== -->
+        <mxCell id="rel-user-artwork" edge="1" parent="1" source="cls-user" target="cls-artwork"
+          style="edgeStyle=entityRelationEdgeStyle;rounded=0;html=1;startArrow=none;endArrow=none;exitX=0;exitY=0.3;entryX=1;entryY=0.3;">
+          <mxGeometry relative="1" as="geometry" />
+          <mxCell id="rel-user-artwork-l1" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" vertex="1" connectable="0" parent="rel-user-artwork">
+            <mxGeometry x="-0.85" y="-1" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+          </mxCell>
+          <mxCell id="rel-user-artwork-l2" value="*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" vertex="1" connectable="0" parent="rel-user-artwork">
+            <mxGeometry x="0.85" y="-1" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+          </mxCell>
+        </mxCell>
+
+        <mxCell id="rel-user-view" edge="1" parent="1" source="cls-user" target="cls-exhibitview"
+          style="edgeStyle=entityRelationEdgeStyle;rounded=0;html=1;startArrow=none;endArrow=none;exitX=1;exitY=0.25;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+          <mxCell id="rel-user-view-l1" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" vertex="1" connectable="0" parent="rel-user-view">
+            <mxGeometry x="-0.85" y="-1" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+          </mxCell>
+          <mxCell id="rel-user-view-l2" value="*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" vertex="1" connectable="0" parent="rel-user-view">
+            <mxGeometry x="0.85" y="-1" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+          </mxCell>
+        </mxCell>
+
+        <mxCell id="rel-user-favorite" edge="1" parent="1" source="cls-user" target="cls-exhibitfavorite"
+          style="edgeStyle=entityRelationEdgeStyle;rounded=0;html=1;startArrow=none;endArrow=none;exitX=1;exitY=0.6;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+          <mxCell id="rel-user-favorite-l1" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" vertex="1" connectable="0" parent="rel-user-favorite">
+            <mxGeometry x="-0.85" y="-1" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+          </mxCell>
+          <mxCell id="rel-user-favorite-l2" value="*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" vertex="1" connectable="0" parent="rel-user-favorite">
+            <mxGeometry x="0.85" y="-1" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+          </mxCell>
+        </mxCell>
+
+        <mxCell id="rel-question-answer" edge="1" parent="1" source="cls-quizquestion" target="cls-quizanswer"
+          style="edgeStyle=entityRelationEdgeStyle;rounded=0;html=1;startArrow=none;endArrow=none;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+          <mxCell id="rel-question-answer-l1" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" vertex="1" connectable="0" parent="rel-question-answer">
+            <mxGeometry x="-0.85" y="-1" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+          </mxCell>
+          <mxCell id="rel-question-answer-l2" value="*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" vertex="1" connectable="0" parent="rel-question-answer">
+            <mxGeometry x="0.85" y="-1" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+          </mxCell>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

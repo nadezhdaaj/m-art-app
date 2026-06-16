@@ -1,0 +1,28 @@
+services:
+  db:
+    image: postgres:16
+    container_name: mart-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 6666
+      POSTGRES_DB: mart_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  api:
+    build: .
+    container_name: mart-api
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://postgres:6666@db:5432/mart_db
+      PORT: 3000
+
+volumes:
+  pgdata:

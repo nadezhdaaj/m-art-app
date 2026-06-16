@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Входные данные приложения M-ART</title>
+<style>
+  body { font-family: "Segoe UI", Arial, sans-serif; margin: 32px; color: #222; }
+  h1 { font-size: 22px; }
+  h2 { font-size: 18px; margin-top: 36px; border-bottom: 2px solid #444; padding-bottom: 4px; }
+  table { border-collapse: collapse; width: 100%; margin-top: 10px; margin-bottom: 8px; }
+  th, td { border: 1px solid #999; padding: 6px 10px; text-align: left; vertical-align: top; font-size: 14px; }
+  th { background: #e6e6e6; }
+  td.field { font-family: Consolas, monospace; white-space: nowrap; }
+  .note { font-size: 13px; color: #555; margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<h1>Входные данные приложения M-ART</h1>
+<p>Обзор данных, поступающих в систему через REST API бэкенда (<code>mart-backend/index.js</code>).</p>
+
+<h2>Таблица 1 — Аутентификация и регистрация</h2>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Эндпоинт</th><th>Описание</th></tr>
+<tr><td class="field">username</td><td>строка</td><td><code>POST /auth/register</code></td><td>Имя пользователя при регистрации</td></tr>
+<tr><td class="field">email</td><td>строка</td><td><code>POST /auth/register</code>, <code>/auth/login</code>, <code>/auth/sign-up/email</code>, <code>/auth/sign-in/email</code></td><td>Электронная почта (логин)</td></tr>
+<tr><td class="field">password</td><td>строка</td><td><code>POST /auth/register</code>, <code>/auth/login</code>, <code>/auth/sign-up/email</code>, <code>/auth/sign-in/email</code></td><td>Пароль</td></tr>
+<tr><td class="field">bio</td><td>строка</td><td><code>POST /auth/register</code></td><td>Краткая биография пользователя</td></tr>
+<tr><td class="field">name</td><td>строка</td><td><code>POST /auth/sign-up/email</code></td><td>Имя пользователя при регистрации (альтернативный флоу)</td></tr>
+</table>
+
+<h2>Таблица 2 — Профиль пользователя</h2>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Эндпоинт</th><th>Описание</th></tr>
+<tr><td class="field">username</td><td>строка</td><td><code>PATCH /profile/me</code></td><td>Новое имя пользователя</td></tr>
+<tr><td class="field">bio</td><td>строка</td><td><code>PATCH /profile/me</code></td><td>Новая биография</td></tr>
+<tr><td class="field">avatar</td><td>файл (multipart)</td><td><code>PATCH /profile/me</code>, <code>PATCH /profile/:id/avatar</code></td><td>Изображение аватара (сохраняется в <code>/uploads/avatars/</code>)</td></tr>
+<tr><td class="field">points</td><td>число</td><td><code>POST /profile/:id/add-points</code></td><td>Количество начисляемых очков</td></tr>
+<tr><td class="field">id</td><td>параметр пути</td><td><code>GET/PATCH /profile/:id</code>, <code>PATCH /profile/:id/avatar</code></td><td>Идентификатор пользователя</td></tr>
+</table>
+
+<h2>Таблица 3 — Произведения искусства (Artwork)</h2>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Эндпоинт</th><th>Описание</th></tr>
+<tr><td class="field">title</td><td>строка</td><td><code>POST/PATCH /artworks/me*</code></td><td>Название произведения</td></tr>
+<tr><td class="field">description</td><td>строка</td><td><code>POST/PATCH /artworks/me*</code></td><td>Описание произведения</td></tr>
+<tr><td class="field">kind</td><td>строка (по умолчанию «painting»)</td><td><code>POST/PATCH /artworks/me*</code></td><td>Тип произведения</td></tr>
+<tr><td class="field">source</td><td>строка (по умолчанию «paint-canvas»)</td><td><code>POST/PATCH /artworks/me*</code></td><td>Источник создания</td></tr>
+<tr><td class="field">status</td><td>строка (по умолчанию «DRAFT»)</td><td><code>POST/PATCH /artworks/me*</code></td><td>Статус произведения</td></tr>
+<tr><td class="field">schemaVersion</td><td>число (по умолчанию 1)</td><td><code>POST/PATCH /artworks/me*</code></td><td>Версия схемы данных произведения</td></tr>
+<tr><td class="field">image</td><td>файл (multipart)</td><td><code>POST/PATCH /artworks/me*</code></td><td>Изображение произведения</td></tr>
+<tr><td class="field">thumbnail</td><td>файл (multipart)</td><td><code>POST/PATCH /artworks/me*</code></td><td>Миниатюра изображения</td></tr>
+<tr><td class="field">id</td><td>параметр пути</td><td><code>GET/PATCH /artworks/me/:id</code></td><td>Идентификатор произведения</td></tr>
+</table>
+<p class="note">* <code>/artworks/me</code> (создание, POST) и <code>/artworks/me/:id</code> (обновление, PATCH)</p>
+
+<h2>Таблица 4 — Избранное и просмотры экспонатов</h2>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Эндпоинт</th><th>Описание</th></tr>
+<tr><td class="field">exhibitId</td><td>параметр пути</td><td><code>POST/DELETE /favorites/exhibits/:exhibitId</code></td><td>Идентификатор экспоната для добавления/удаления из избранного</td></tr>
+<tr><td class="field">exhibitId</td><td>параметр пути</td><td><code>POST /progress/exhibits/:exhibitId/view</code></td><td>Идентификатор просмотренного экспоната</td></tr>
+</table>
+
+<h2>Таблица 5 — Гид (чат-помощник)</h2>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Эндпоинт</th><th>Описание</th></tr>
+<tr><td class="field">topicId</td><td>строка</td><td><code>POST /guide/chat</code></td><td>Идентификатор темы беседы</td></tr>
+<tr><td class="field">message</td><td>строка</td><td><code>POST /guide/chat</code></td><td>Текст сообщения пользователя</td></tr>
+</table>
+
+<h2>Таблица 6 — Викторина (Quiz)</h2>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Эндпоинт</th><th>Описание</th></tr>
+<tr><td class="field">question</td><td>строка</td><td><code>POST /quiz/add</code></td><td>Текст вопроса</td></tr>
+<tr><td class="field">fact</td><td>строка</td><td><code>POST /quiz/add</code></td><td>Сопутствующий факт к вопросу</td></tr>
+<tr><td class="field">correctIndex</td><td>число</td><td><code>POST /quiz/add</code></td><td>Индекс правильного варианта ответа</td></tr>
+<tr><td class="field">answers</td><td>массив строк</td><td><code>POST /quiz/add</code></td><td>Варианты ответов</td></tr>
+</table>
+
+<h2>Таблица 7 — Сквозные данные</h2>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Где используется</th><th>Описание</th></tr>
+<tr><td class="field">Authorization (JWT)</td><td>заголовок запроса</td><td>Все защищённые эндпоинты (<code>authMiddleware</code>)</td><td>Токен авторизации пользователя</td></tr>
+<tr><td class="field">id / :id</td><td>параметр пути</td><td>Множество эндпоинтов</td><td>Идентификаторы сущностей (пользователь, произведение и т.д.) в URL</td></tr>
+</table>
+
+</body>
+</html>
